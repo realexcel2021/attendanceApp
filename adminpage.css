@@ -1,0 +1,100 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.admin{
+    margin-top: 50px;
+}
+
+.wel{
+    text-align: center;
+    color: green;
+}
+
+.employees{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 30px;
+}
+
+.each{
+    border: 1px solid #ccc;
+    width: 150px;
+    padding: 10px;
+}
+
+.each p{
+    text-align: center;
+    font-weight: bold;
+}
+
+.each--tag{
+    color: rgb(139, 139, 139);
+}
+
+.each--num{
+    color: green;
+    font-size: 40px;
+}
+
+#designerChart{
+    width: 50%;
+    margin: 50px auto;
+}
+
+.attendance{
+    text-align: center;
+    margin-top: 20px;
+}
+
+#chart1{
+    width: 50%;
+    margin: 30px auto;
+}
+
+.searchList{
+    margin: 30px auto;
+    text-align: center;
+    width: 80%;
+}
+
+input{
+    margin: 20px auto;
+    width: 80%;
+    height: 20px;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    font-size: large;
+    outline: none;
+    background-image: url(./search-line.png);
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+}
+
+ul{
+    list-style-type: none;
+}
+
+li{
+    border: 1px solid #ccc;
+    text-align: left;
+    padding: 10px;
+    
+}
+
+li:hover{
+    background-color: #eee;
+    color: green;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+    font-size: large;
+}
+
+a:hover{
+    color: green;
+}
