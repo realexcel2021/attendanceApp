@@ -104,3 +104,31 @@
     transform: translateY(5px);
     transition-duration: 500ms;
 }
+
+#absent1{
+    display: flex;
+    align-items: center;
+    width: max-content;
+    text-align: center;
+    margin: 20px auto;
+    gap: 20px;
+}
+
+#absent1 input{
+    width: 20px;
+}
+
+.checkout{
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+#names{
+    margin-top: 20px;
+    text-transform: uppercase;
+    font-size: x-large;
+}
+
+#matric{
+    text-transform: uppercase;
+}

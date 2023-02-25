@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <title> Attendance Form </title>
 </head>
 <body>
@@ -16,13 +17,25 @@
         <input id="input-text-2" type="text" placeholder="Enter Student Matriculation Number" required/>
 
         <label>select student's gender</label>
-        <select>
+        <select id="gender">
             <option>Male</option>
             <option>Female</option>
         </select>
-
-        <button type="button" id="form"> Submit Form </button>
+        <div id="absent1">
+            <input type="checkbox" class="absent"/>
+            <label> Mark Student Absent </label>
+        </div>
+        <button type="button" id="form"> CheckOut Attendance </button>
     </form>
+
+    <div class="checkout">
+
+        <h1 id="names"></h1>
+        <p>Matriculation Number : <b id="matric"></b></p>
+        <p >Gender : <b id="genderText"> </b></p>
+        <p id="absentText"></p>
+        <button> Submit Attendance </button>
+    </div>
     <script src="./index.js"></script>
    </div>
 </body>
