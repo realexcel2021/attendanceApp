@@ -47,7 +47,6 @@ def load_user(user_pass):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    flash('You are not not sudo hehe')
     return redirect(url_for('login'))
 
 
@@ -55,8 +54,6 @@ def unauthorized():
 @login_required
 def index():
 	return render_template('index.html',user=current_user)
-
-
 
 
 @app.route('/people', methods=['POST'])
