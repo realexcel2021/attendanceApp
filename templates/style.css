@@ -1,0 +1,106 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.app{
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    margin: 50px auto;
+    width: 500px;
+    box-shadow: 2px #ccc;
+}
+
+.Login{
+    width: 500px;
+    border: 1px solid #ccc;
+    text-align: center;
+    padding: 20px;
+    margin: 100px auto;
+}
+
+.Login input{
+    display: block;
+    width: 80%;
+    height: 40px;
+    margin: 10px auto;
+    padding: 10px;
+    outline: none;
+    border: 1px solid green;
+}
+
+.Login h1{
+    color: green;
+}
+
+.Login button{
+    display: block;
+    padding: 10px 20px;
+    background-color: green;
+    color: white;
+    border: none;
+    text-align: center;
+    margin: 10px auto;
+    font-size: large;
+    border-radius: 2px;
+}
+
+.Login button:hover{
+    transform: translateY(5px);
+    transition-duration: 500ms;
+}
+
+.app h1{
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: medium;
+}
+
+.app input{
+    display: block;
+    width: 80%;
+    height: 40px;
+    margin: 10px auto;
+    outline: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.app select{
+    width: 80%;
+    height: 40px;
+    border: 2px solid #ccc;
+    outline: none;
+    padding: 10px;
+    margin: 10px auto;
+    display: block;
+}
+
+.app option{
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    box-sizing: border-box;
+}
+
+.app h1{
+    color: green;
+}
+
+.app button{
+    display: block;
+    padding: 10px 20px;
+    background-color: green;
+    color: white;
+    border: none;
+    text-align: center;
+    margin: 10px auto;
+    font-size: large;
+    border-radius: 2px;
+}
+
+.app button:hover{
+    transform: translateY(5px);
+    transition-duration: 500ms;
+}
