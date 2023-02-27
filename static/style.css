@@ -132,3 +132,8 @@
 #matric{
     text-transform: uppercase;
 }
+
+.details{
+    display: flex;
+    justify-content: space-between;
+}

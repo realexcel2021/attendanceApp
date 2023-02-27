@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./adminpage.css">
+    <link rel="stylesheet" href="../static/adminpage.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -17,38 +17,39 @@
     <div class="admin">
 
         <h1 class="wel"> Welcome to the admin page </h1>
-        <div class="employees">
-            <div class="each">
-                <p class="each--tag"> Number of Male Employee's </p>
-                <p class="each--num"> 25 </p>
-            </div>
-            <div class="each">
-                <p class="each--tag"> Number of female Employees's </p>
-                <p class="each--num"> 21 </p>
-            </div>
-        </div>
 
         <div class="searchList">
             <input type="text" id="myInput" placeholder="Search for students.." title="Type in a name">
             <ul id="myUL">
-                <li><a href="#">Adele</a></li>
-                <li><a href="#">Agnes</a></li>
-              
-                <li><a href="#">Billy</a></li>
-                <li><a href="#">Bob</a></li>
-              
-                <li><a href="#">Calvin</a></li>
-                <li><a href="#">Christina</a></li>
-                <li><a href="#">Cindy</a></li>
+                
               </ul>
         </div>
 
-        <h1 class="attendance"> Attendance Bar Chart </h1>
+        <h1 class="attendance"> Attendance Statistics </h1>
+
+        <div id="attendanceDetails">
+           <div id="attendance--days">
+                    <p> Total Class Days</p>
+                    <p id="attendance--daysnum"> 120 </p>
+           </div>
+
+           <div id="absent--days">
+                <p id="absent--text"> Total Students </p>
+                <p id="absent--daysnum"> 30 </p>
+       </div>
+
+       <div id="sick--days">
+            <p id="sick--text"> Semester</p>
+            <p id="sick--daysnum"> Second Semester </p>
+       </div>
+   </div>
+        </div>
         <div id="chart"></div>
         <div id="chart1"></div>
-        <div id="designerChart"></div>
+        <div id="donut"></div>
+        <p class="rate"> Rate at which students Attend Class </p>
 
-        <script type="text/javascript" charset="utf-8" src="./script.js"></script>
+        <script type="text/javascript" charset="utf-8" src="../static/script.js"></script>
     </div>
 </body>
 </html>

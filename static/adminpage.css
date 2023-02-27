@@ -68,7 +68,7 @@ input{
     padding: 12px 20px 12px 40px;
     font-size: large;
     outline: none;
-    background-image: url(./search-line.png);
+    background-image: url(../search-line.png);
     background-position: 10px 12px;
     background-repeat: no-repeat;
 }
@@ -97,4 +97,52 @@ a{
 
 a:hover{
     color: green;
+}
+
+#attendanceDetails{
+    margin: 30px auto;
+    width: 40%;
+    font-size: larger;
+    padding: 40px;
+    box-shadow: 2px 1px 1px 1px #ccc;
+}
+
+#attendance--days{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#attendance--daysnum{
+    font-weight: bold;
+}
+
+#sick--days{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#sick--daysnum{
+    font-weight: bold;
+}
+
+#absent--days{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#absent--daysnum{
+    font-weight: bold;
+}
+
+.rate{
+    margin: 30px auto;
+    font-weight: bold;
+    text-align: center;
+    font-size: large;
 }

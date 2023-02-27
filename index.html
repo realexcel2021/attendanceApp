@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./static/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <title> Attendance Form </title>
 </head>
@@ -22,7 +22,7 @@
             <option>Female</option>
         </select>
         <div id="absent1">
-            <input type="checkbox" class="absent"/>
+            <input type="checkbox" id="absent">
             <label> Mark Student Absent </label>
         </div>
         <button type="button" id="form"> CheckOut Attendance </button>
@@ -31,12 +31,24 @@
     <div class="checkout">
 
         <h1 id="names"></h1>
-        <p>Matriculation Number : <b id="matric"></b></p>
-        <p >Gender : <b id="genderText"> </b></p>
-        <p id="absentText"></p>
+
+        <div class="details">
+            <p>Matriculation Number</p>
+         <p id="matric"></p>
+        </div>
+
+       <div class="details">
+        <p >Gender</p>
+         <p id="genderText"> </p>
+       </div>
+
+        <div class="details">
+            <p> Status </p>
+            <p id="absentText"></p>
+        </div>
         <button> Submit Attendance </button>
     </div>
-    <script src="./index.js"></script>
+    <script src="./static/index.js"></script>
    </div>
 </body>
 </html>

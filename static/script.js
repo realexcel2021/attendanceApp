@@ -1,4 +1,126 @@
-  function myFunction() {
+var ulTag = document.getElementById("myUL")
+const totalDays = 120;
+let studentID = null
+let studentDetails = null
+const totalAbsentDaysArray = []
+let totalAbsentDays = null
+
+function donut (present, absent) {
+  bindto: "#donut"
+  chart = c3.generate({
+    data: {
+        columns: [
+            ['present', present],
+            ['absent', absent],
+        ],
+        type : 'donut',
+    },
+    donut: {
+        title: "Attendance Rate"
+    }
+  });
+ }
+
+ function pieChart(d1, d2, d3){
+  bindto: "#chart"
+  var chart = c3.generate({
+    data: {
+        // iris data from R
+        columns: [
+            ['present', d1],
+            ['absent', d2],
+            ['sick', d3]
+        ],
+        type : 'pie',
+        
+    }
+});
+}
+
+
+const Students = [
+  {
+    id : "QWE123",
+    name : "Gray",
+    matricNum : "QWE123",
+    absent : 12,
+    calledInSick : 9,
+    gender : "male"
+},
+{
+  id : "QWE124",
+  name : "Mark",
+  matricNum : "QWE124",
+  absent : 9,
+  calledInSick : 4,
+  gender : "male"
+},
+{
+  id : "QWE125",
+  name : "David John",
+  matricNum : "QWE125",
+  absent : 50,
+  calledInSick : 8,
+  gender : "male"
+},
+{
+  id : "QWE126",
+  name : "Sheri Davis",
+  matricNum : "QWE126",
+  absent : 4,
+  calledInSick : 0,
+  gender : "female"
+},
+{
+  id : "QWE127",
+  name : "Duke Mark",
+  matricNum : "QWE127",
+  absent : 120,
+  calledInSick : 0,
+  gender : "female"
+}
+]
+
+Students.forEach((item) => {
+  totalAbsentDaysArray.push(item.absent)
+})
+
+totalAbsentDaysArray.forEach(item => {
+    totalAbsentDays += item
+})
+
+console.log(totalAbsentDays)
+
+Students.forEach((item) => {
+  let listItem = document.createElement("li");
+  listItem.id = item.matricNum;
+
+  let eachItem = document.createElement("a");
+  eachItem.innerText = item.matricNum
+  listItem.appendChild(eachItem)
+  ulTag.appendChild(listItem)
+  document.getElementById(listItem.id).onclick = () => {
+    studentID = listItem.id
+        document.getElementById("myUL").style.display = "none" 
+    console.log(studentID)
+
+    if (studentID){
+     studentDetails = Students.find((obj) => obj.id === studentID);
+     document.querySelector(".attendance").innerHTML = "Attendance Details for " + studentDetails.name;
+     document.querySelector("#absent--daysnum").innerHTML = studentDetails.absent;
+     document.querySelector("#absent--text").innerHTML = "Days " + studentDetails.name + " was absent";
+     document.querySelector("#sick--text").innerHTML = "Days " + studentDetails.name + " was sick"
+     document.querySelector("#sick--daysnum").innerHTML = studentDetails.calledInSick
+     document.querySelector(".rate").innerHTML = "Rate at which " + studentDetails.name + " Attend Class"
+     let totalAbsent = studentDetails.absent + studentDetails.calledInSick
+     pieChart(totalDays - totalAbsent, studentDetails.absent, studentDetails.calledInSick)
+
+  }
+  }
+})
+
+function myFunction() {
+
     var input, filter, ul, li, a, i, txtValue;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
@@ -15,116 +137,17 @@
     }
 }
 
+ 
+
 document.getElementById("myUL").style.display = "none"
 
 
-document.getElementById("myInput").onfocus = () =>{  document.getElementById("myUL").style.display = ""}
-document.getElementById("myInput").onblur = () => document.getElementById("myUL").style.display = "none"
+document.getElementById("myInput").onfocus = () =>{ 
+ document.getElementById("myUL").style.display = "" 
+  
+ }
+
+// document.getElementById("myInput").onblur = () => document.getElementById("myUL").style.display = "none"
 document.getElementById("myInput").onkeyup = () => myFunction()
 
-
-$(document).ready(function() {
-        
-  columnColors = ['#9a4d6f', '#c76c47', '#f85115', '#d9b099', '#d4ba2f'];
-
-  function setColumnBarColors(colors, chartContainer) {
-
-    $('#' + chartContainer + ' .c3-chart-bars .c3-shape').each(function(index) {
-      this.style.cssText += 'fill: ' + colors[index] + ' !important; stroke: ' + colors[index] + '; !important';
-    });
-
-    $('#' + chartContainer + ' .c3-chart-texts .c3-text').each(function(index) {
-      this.style.cssText += 'fill: ' + colors[index] + ' !important;';
-    });
-  }
-
-  var chart = c3.generate({
-    bindto: '#designerChart',
-    data: {
-      columns: [
-        ['attendance', 6, 8, 6, 5, 4]
-      ],
-      type: 'bar'
-    },
-    axis: {
-      x: {
-        label: {
-          text: 'Famales',
-          position: 'outer-center',
-        },
-        type: 'category',
-        categories: ['Day_1', 'Day_2', 'Day_3', 'Day_4', 'Day_5'],
-        tick: {
-          centered: true
-        }
-      },
-      y: {
-        label: {
-          text: 'Attendance (Days)',
-          position: 'outer-middle'
-        },
-        max: 10,
-        min: 0,
-        padding: {
-          top: 0,
-          bottom: 0
-        }
-      }
-    },
-    legend: {
-      show: false
-    }
-  });
-
-  setColumnBarColors(columnColors, 'designerChart');
-
-  // Color turns to original when window is resized
-  // To handle that
-  $(window).resize(function() {
-    setColumnBarColors(columnColors, 'designerChart');
-  });
-});
-
-function pieChart(d1, d2, d3){
-  bindto: "#chart"
-  var chart = c3.generate({
-    data: {
-        // iris data from R
-        columns: [
-            ['present', d1],
-            ['absent', d2],
-            ['sick', d3]
-        ],
-        type : 'pie',
-        
-    }
-});
-
-
-setTimeout(function () {
-  chart.unload({
-      ids: 'data1'
-  });
-  chart.unload({
-      ids: 'data2'
-  });
-}, 2500);
-
-}
-
-function lineChart(){
-  var chart = c3.generate({
-    bindto: '#chart1',
-    data: {
-      columns: [
-        ['data1', 30, 200, 100, 400, 150, 250],
-        ['data2', 50, 20, 10, 40, 15, 25]
-      ]
-    }
-});
-
-
-}
-
-  pieChart(12, 3, 10)
-  lineChart()
+donut(totalDays, totalAbsentDays)
