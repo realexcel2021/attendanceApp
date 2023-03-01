@@ -33,9 +33,9 @@ def create_student():
 		db.create_all()
 		
 	data = request.get_json()
-	matric_num = data['matric_num']
-	first_name = data['first_name']
-	last_name = data['last_name']
+	matric_num = data['matricNum']
+	first_name = str(data['name']).split()[0]
+	last_name = str(data['name']).split()[0]
 	gender = data['gender']
 	status = data['absent']
 	sick = data['sick']
@@ -109,4 +109,4 @@ def get_student():
 		return jsonify({'message': 'Student not found'})
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run()

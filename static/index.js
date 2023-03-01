@@ -95,7 +95,7 @@ theForm.addEventListener("click", (event) => {
 })
 
 submitButton.addEventListener("click", () => {
-    fetch('../students.json', {
+    fetch('/people', {
         method: 'POST',
         body: JSON.stringify(studentData),
         headers: {
@@ -109,6 +109,3 @@ submitButton.addEventListener("click", () => {
     .then(response => response.json())
     
 })
-
-
-
