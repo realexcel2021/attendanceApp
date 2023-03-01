@@ -97,7 +97,7 @@ theForm.addEventListener("click", (event) => {
 submitButton.addEventListener("click", () => {
     fetch('../students.json', {
         method: 'POST',
-        body: jsonData,
+        body: studentData,
         headers: {
           'Content-Type': 'application/json'
         }
