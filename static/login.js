@@ -44,7 +44,8 @@ login.addEventListener("click", (event) => {
         })
         .then(response => {
             if (response.ok) {
-                window.location.href = "adminPage.html"
+                // window.location.href = "templates/adminPage.html"
+                console.log("Logged in")
             } else {
                 alert("Invalid username or password.")
             }

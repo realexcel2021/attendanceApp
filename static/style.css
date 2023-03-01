@@ -110,7 +110,16 @@
     align-items: center;
     width: max-content;
     text-align: center;
-    margin: 20px auto;
+    margin: 0px auto;
+    gap: 20px;
+}
+
+#sick1{
+    display: flex;
+    align-items: center;
+    width: max-content;
+    text-align: center;
+    margin: auto;
     gap: 20px;
 }
 
@@ -118,7 +127,11 @@
     width: 20px;
 }
 
-.checkout{
+#sick1 input{
+    width: 20px;
+}
+
+#checkout{
     padding: 20px;
     border: 1px solid #ccc;
 }
@@ -136,4 +149,24 @@
 .details{
     display: flex;
     justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+#sickText{
+    font-weight: bold;
+}
+
+#matric{
+    font-weight: bold;
+    margin-bottom: 10px;
+
+}
+
+#genderText{
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#absentText{
+    font-weight: bold;
 }

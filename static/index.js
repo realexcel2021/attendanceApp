@@ -4,8 +4,13 @@ var lName = document.getElementById("input-text-1")
 var matricNum = document.getElementById("input-text-2")
 var gender = document.getElementById("gender")
 let arrivalState =  document.getElementById("absent")
+const checkOut = document.getElementById("checkout")
+const submitButton = document.getElementById("submitAttendance")
+const Sick = document.getElementById("sick")
 
-const studentData = [];
+checkOut.style.display = "none"
+
+let studentData = null;
 
 var data = {
     name : "John Doe",
@@ -33,6 +38,16 @@ function validate() {
     return status
  }
 
+ function validateAbsent(status){
+    let valStatus = null
+    if(status){
+        valStatus = 1
+    }else{
+        valStatus = 0
+    }
+    return valStatus
+ }
+
 
 theForm.addEventListener("click", (event) => {
     event.preventDefault();
@@ -49,16 +64,47 @@ theForm.addEventListener("click", (event) => {
         document.getElementById("names").innerText = fname.value + " " + lName.value;
         document.getElementById("matric").innerText = matricNum.value;
         document.getElementById("genderText").innerText = gender.value;
+        checkOut.style.display = ""
+
         if(arrivalState.checked == true){
             document.getElementById("absentText").innerText =  " Marked Absent"
         }else{
             document.getElementById("absentText").innerText =  " Marked Present"
         }
 
+        if(Sick.checked == true){
+            document.getElementById("sickText").innerText =  " Student Reported sick"
+            arrivalState.checked = false
+        }else{
+            document.getElementById("sickText").innerText =  " Student not Reported Sick"
+        }
+
+        let firstName = fname.value;
+        let lastName = lName.value
+        let capitalizedfName = firstName[0].toUpperCase() + firstName.slice(1);
+        let capitalizedlName = lastName[0].toUpperCase() + lastName.slice(1);
+
+        let studentDataObj = {
+            id : matricNum.value.toUpperCase(),
+            name : capitalizedfName + " " + capitalizedlName,
+            matricNum : matricNum.value.toUpperCase(),
+            gender : gender.value,
+            absent : validateAbsent(arrivalState.checked),
+            sick : validateAbsent(Sick.checked),
+            gender : gender.value
+        }
+
+       studentData = studentDataObj
+
+        console.log(studentData)
    }
 
 
 })
 
+submitButton.addEventListener("click", () => {
+    window.location.href = "success.html"
+})
 
-// window.location.href = "success.html"
+
+

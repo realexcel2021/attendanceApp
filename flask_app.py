@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify,render_template, redirect, url_for,send_from_directory,flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import login_required, LoginManager, current_user,login_user
+#from flask_login import login_required, LoginManager, current_user,login_user
 from flask_cors import CORS
 from sqlalchemy import inspect
 import ast, secrets
@@ -10,8 +10,8 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 secret_key = secrets.token_hex(128)
-login_manager = LoginManager()
-login_manager.init_app(app)
+# login_manager = LoginManager()
+# login_manager.init_app(app)
 app.secret_key = secret_key
 
 class Person(db.Model):
@@ -23,37 +23,57 @@ class Person(db.Model):
 	status = db.Column(db.Integer,default=0,nullable=False)
 
 class Admin(db.Model):
-	with app.app_context():
-		if not inspect(db.engine).has_table('authentication'):
-			db.create_all()
-	admin_id = db.Column(db.Integer, primary_key=True)
-	user_name = db.Column(db.String,nullable=False)
-	user_pass = db.Column(db.String, nullable=False)
+	id = db.Column(db.Integer, primary_key=True)
+	user_name = db.Column(db.String(50),nullable=False)
+	user_pass = db.Column(db.String(30), nullable=False)
 
-	def __init__(self, admin_id):
-		self.id = admin_id
-		#TODO: Create admin signup route + logic
+	# def __init__(self, admin_id):
+	# 	self.id = admin_id
+	# 	#TODO: Create admin signup route + logic
 
-	def get_admin(self):
-		return self.id
+	# def get_admin(self):
+	# 	return self.id
 	
-	def is_authenticated(self):
-		exists = db.session.query(Admin).filter_by(user_name=self.user_name, user_pass=self.user_pass).first()
-		return bool(exists)
+	# def is_authenticated(self):
+	# 	exists = db.session.query(Admin).filter_by(user_name=self.user_name, user_pass=self.user_pass).first()
+	# 	return bool(exists)
 
-@login_manager.user_loader
-def load_user(user_pass):
-	return login_details.get(user_pass)
 
-@login_manager.unauthorized_handler
-def unauthorized():
-    return redirect(url_for('login'))
+# @app.route('/login',methods=['POST','GET'])
+#TODO: Admin logic
+# def create_admin():
+# 	if request.method == 'POST':
+# 		if not inspect(db.engine).has_table('authentication'):
+# 			db.create_all()
+# 		user_name =request.get_json('username')
+# 		password =request.get_json('password')
+# 		admin = Admin(
+# 			user_name=user_name,
+# 			password=password
+# 		)
+
+# 		is_allowed=db.session.get(Admin).filter_by(password=password).first()
+# 		if not is_allowed:
+# 			db.session.add(admin)
+# 			db.session.commit()
+# 			return jsonify({'message':'New admin created'})
+		
+
+# @login_manager.user_loader
+# def load_user(user_pass):
+# 	return login_details.get(user_pass)
+
+# @login_manager.unauthorized_handler
+# def unauthorized():
+#     return redirect(url_for('login'))
 
 
 @app.route('/',methods=['GET'])
-@login_required
+# @login_required
 def index():
-	return render_template('index.html',user=current_user)
+	return render_template('index.html')#,user=current_user)
+
+
 
 
 @app.route('/people', methods=['POST'])
@@ -66,7 +86,7 @@ def create_student():
 	first_name = data['first_name']
 	last_name = data['last_name']
 	gender = data['gender']
-	status = data['status']
+	status = data['absent']
 
 	person = Person(
 	matric_num=matric_num,
@@ -100,11 +120,8 @@ def login():
         # Get the user's credentials and authenticate them
         user = authenticate_user(user=request.args.get('username'), passwd=request.args.get('password'))
         if user:
-            login_user(user)
-            flash('Logged in successfully.')
+            #login_user(user)
             return redirect(url_for('index'))
-        else:
-            flash('Invalid username or password.')
     return render_template('login.html')
 
 @app.route('/auth.json')
@@ -125,7 +142,7 @@ def get_student():
 			'first_name': person.first_name,
 			'last_name' : person.last_name,
 			'gender': person.gender,
-			'status' : person.status,
+			'absent' : person.status,
 		})
 	else:
 		return jsonify({'message': 'Student not found'})
