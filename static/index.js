@@ -51,15 +51,7 @@ function validate() {
 
 theForm.addEventListener("click", (event) => {
     event.preventDefault();
-    // fetch('students.json', {
-    //     method: 'POST',
-    //     body: jsonData,
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     }
-    //   })
-    // .then(() => console.log(jsonData))
-    // .then(response => response.json())
+
    if (validate()){
         document.getElementById("names").innerText = fname.value + " " + lName.value;
         document.getElementById("matric").innerText = matricNum.value;
@@ -103,7 +95,18 @@ theForm.addEventListener("click", (event) => {
 })
 
 submitButton.addEventListener("click", () => {
-    window.location.href = "success.html"
+    fetch('../students.json', {
+        method: 'POST',
+        body: jsonData,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    .then(() => {
+        window.location.href = "success.html"
+    })
+    .then(response => response.json())
+    
 })
 
 
