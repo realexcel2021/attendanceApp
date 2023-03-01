@@ -1,10 +1,13 @@
 from flask import Flask, request, jsonify,render_template, redirect, url_for,send_from_directory
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+#from flask_ngrok import run_with_ngrok
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
-import ast, secrets
+import ast, secrets, logging
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
+#run_with_ngrok(app)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
@@ -69,12 +72,16 @@ def admin():
 	if request.method == 'GET':
 		return render_template('adminPage.html')
 
+@app.route('/login.html',methods=['GET'])
+def login_html():
+	return render_template('login.html')
 
 @app.route('/login',methods = ['POST','GET'])
 def login():
 	if request.method == 'POST':
 		return redirect(url_for('index'))
-	return render_template('login.html')
+	elif request.method == 'GET':
+		return render_template('login.html')
 
 @app.route('/auth.json')
 def get_auth():
