@@ -8,6 +8,10 @@ const checkOut = document.getElementById("checkout")
 const submitButton = document.getElementById("submitAttendance")
 const Sick = document.getElementById("sick")
 
+document.getElementById("adminLogin").addEventListener("click", () => {
+    window.location.href = "./login.html"
+})
+
 checkOut.style.display = "none"
 
 let studentData = null;
@@ -103,9 +107,8 @@ submitButton.addEventListener("click", () => {
         }
       })
     .then((response) => {
-        //window.location.href = "success.html"
+        window.location.href = "success.html"
         console.log(response)
     })
-    .then(response => response.json())
     
 })
