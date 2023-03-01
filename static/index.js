@@ -97,13 +97,14 @@ theForm.addEventListener("click", (event) => {
 submitButton.addEventListener("click", () => {
     fetch('../students.json', {
         method: 'POST',
-        body: studentData,
+        body: JSON.stringify(studentData),
         headers: {
           'Content-Type': 'application/json'
         }
       })
-    .then(() => {
-        window.location.href = "success.html"
+    .then((response) => {
+        //window.location.href = "success.html"
+        console.log(response)
     })
     .then(response => response.json())
     
