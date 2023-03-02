@@ -9,7 +9,7 @@ const submitButton = document.getElementById("submitAttendance")
 const Sick = document.getElementById("sick")
 
 document.getElementById("adminLogin").addEventListener("click", () => {
-    window.location.href = "/admin.html"
+    window.location.href = "/login.html"
 })
 
 checkOut.style.display = "none"

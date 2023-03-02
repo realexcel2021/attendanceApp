@@ -31,6 +31,6 @@ function Validate (){
 login.addEventListener("click", (event) => {
     event.preventDefault()
     if (Validate()){
-        window.location.href = "../admin.html"
+        window.location.href = "/adminPage.html"
     }
 })
