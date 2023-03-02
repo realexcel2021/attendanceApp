@@ -5,6 +5,9 @@ let studentDetails = null
 const totalAbsentDaysArray = []
 let totalAbsentDays = null
 
+fetch("/student.json")
+    .then(response => console.log(response))
+
 function donut (present, absent) {
   bindto: "#donut"
   chart = c3.generate({
