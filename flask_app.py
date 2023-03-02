@@ -65,15 +65,10 @@ def handle_options():
 	response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
 	return response
 
-@app.route('/admin',methods=['GET'])
+app.route('/adminPage.html',methods=['GET'])
 def admin():
 	if request.method == 'GET':
 		return render_template('adminPage.html')
-	
-@app.route('/success',methods=['GET'])
-def success():
-	if request.method=='GET':
-		return render_template('success.html')
 
 @app.route('/login.html',methods=['GET'])
 def login_html():
@@ -121,7 +116,7 @@ def get_all():
 			'gender': student.gender,
 			'absent' : student.status,
 			'sick' : student.sick})
-
+	print(json_arr,type(json_arr))
 	with open('students.json','w') as file:
 		json.dump(json_arr,file)
 	with open('students.json','r') as json_out_file:
