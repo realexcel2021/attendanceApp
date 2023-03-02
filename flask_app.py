@@ -1,13 +1,11 @@
 from flask import Flask, request, jsonify,render_template, redirect, url_for,send_from_directory
 from flask_cors import CORS
-#from flask_ngrok import run_with_ngrok
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
-import ast, secrets, logging
+import ast, secrets, logging, json
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
-#run_with_ngrok(app)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
@@ -87,9 +85,6 @@ def login():
 def get_auth():
 	return send_from_directory('static', 'auth.json')
 
-def authenticate_user(user,passwd):
-	return bool(user==login_details['username'] and passwd==login_details['password'])
-
 @app.route('/people/', methods=['GET'])
 def get_student():
 	matric_num=request.args.get('matric_num')
@@ -108,5 +103,25 @@ def get_student():
 	else:
 		return jsonify({'message': 'Student not found'})
 
+@app.route('/students.json',methods=['GET'])
+def get_all():
+	students = Person.query.all()
+	json_arr  = []
+	for student in students:
+		json_arr.append({
+			'id' : student.matric_num,
+			'matricNum': student.matric_num,
+			'first_name': student.first_name,
+			'last_name' : student.last_name,
+			'gender': student.gender,
+			'absent' : student.status,
+			'sick' : student.sick})
+	print(json_arr,type(json_arr))
+	with open('students.json','w') as file:
+		json.dump(json_arr,file)
+	with open('students.json','r') as json_out_file:
+		out=json.load(json_out_file)
+	return jsonify(out)
+
 if __name__ == '__main__':
-	app.run()
+	app.run(debug=True)
