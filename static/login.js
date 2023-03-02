@@ -5,10 +5,12 @@ const login = document.getElementById("login")
 let authInfo = {}
 
 fetch('auth.json')
-  .then(response => {
+  .then(Response => {
     // use the parsed data here
-    
-    console.log(response.headers)
+     Response.json().then(json => {
+        authInfo = json
+        console.log(authInfo)
+     })
   })
   .catch(error => console.error(error));
 
@@ -29,6 +31,6 @@ function Validate (){
 login.addEventListener("click", (event) => {
     event.preventDefault()
     if (Validate()){
-        window.location.href = "../templates/adminpage.html"
+        window.location.href = "../admin.html"
     }
 })
