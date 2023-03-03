@@ -32,8 +32,8 @@ def create_student():
 		
 	data = request.get_json()
 	matric_num = data['matricNum']
-	first_name = str(data['name']).split()[0]
-	last_name = str(data['name']).split()[0]
+	first_name = str(data['name']).split()[0].title()
+	last_name = str(data['name']).split()[1].title()
 	gender = data['gender']
 	status = data['absent']
 	sick = data['sick']
@@ -114,7 +114,7 @@ def get_student():
 	else:
 		return jsonify({'message': 'Student not found'})
 
-@app.route('/student.json',methods=['GET'])
+@app.route('/students.json',methods=['GET'])
 def get_all():
 	students = Person.query.all()
 	json_arr  = []
