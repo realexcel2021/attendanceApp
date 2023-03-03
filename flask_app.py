@@ -75,6 +75,7 @@ def success():
 	if request.method=='GET':
 		return render_template('success.html')
 
+
 @app.route('/login.html',methods = ['POST','GET'])
 def login():
 	if request.method == 'POST':
