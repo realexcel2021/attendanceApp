@@ -65,7 +65,7 @@ def handle_options():
 	response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
 	return response
 
-@app.route('/adminPage.html',methods=['GET'])
+@app.route('/admin',methods=['GET'])
 def admin():
 	if request.method == 'GET':
 		return render_template('adminPage.html')
@@ -76,7 +76,7 @@ def success():
 		return render_template('success.html')
 
 
-@app.route('/login.html',methods = ['POST','GET'])
+@app.route('/login',methods = ['POST','GET'])
 def login():
 	if request.method == 'POST':
 		info = request.get_json()
