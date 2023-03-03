@@ -65,7 +65,7 @@ def handle_options():
 	response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
 	return response
 
-@app.route('/admin',methods=['GET'])
+@app.route('/adminPage.html',methods=['GET'])
 def admin():
 	if request.method == 'GET':
 		return render_template('adminPage.html')
@@ -75,16 +75,21 @@ def success():
 	if request.method=='GET':
 		return render_template('success.html')
 
-@app.route('/login.html',methods=['GET'])
-def login_html():
-	return render_template('login.html')
-
-@app.route('/login',methods = ['POST','GET'])
+@app.route('/login.html',methods = ['POST','GET'])
 def login():
 	if request.method == 'POST':
-		return redirect(url_for('index'))
+		info = request.get_json()
+		user = info['username']
+		passwd = info['password']
+		if authenticate(user,passwd):
+			return redirect(url_for('admin'))
+		else:
+			return jsonify({'message':'incorrect username or password'})
 	elif request.method == 'GET':
 		return render_template('login.html')
+
+def authenticate(user,passwd):
+	return bool(user==login_details['username'] and passwd==login_details['password'])
 
 @app.route('/auth.json')
 def get_auth():
