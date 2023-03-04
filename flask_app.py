@@ -20,6 +20,7 @@ class Person(db.Model):
 	gender = db.Column(db.String(10),nullable=False)
 	status = db.Column(db.Integer,default=0,nullable=False)
 	sick = db.Column(db.Integer,default=0,nullable=False)
+	present = db.Column(db.Integer,default=0,nullable=False)
 
 @app.route('/',methods=['GET'])
 def index():
@@ -37,6 +38,7 @@ def create_student():
 	gender = data['gender']
 	status = data['absent']
 	sick = data['sick']
+	present = data['present']
 
 	person = Person(
 	matric_num=matric_num,
@@ -44,7 +46,8 @@ def create_student():
 	last_name=last_name,
 	gender = gender,
 	status = status,
-	sick = sick)
+	sick = sick,
+	present=present)
 
 	exists=Person.query.filter_by(matric_num=matric_num).first()
 	if not exists:
@@ -54,6 +57,7 @@ def create_student():
 	else:
 		exists.status += status
 		exists.sick += sick
+		present += present
 		db.session.commit()
 		return jsonify({'message': f"Student with matric {matric_num} already exists, attendance has been updated"})
 
@@ -114,7 +118,8 @@ def get_student():
 			'last_name' : person.last_name,
 			'gender': person.gender,
 			'absent' : person.status,
-			'sick' : person.sick
+			'sick' : person.sick,
+			'present' : person.present
 		})
 	else:
 		return jsonify({'message': 'Student not found'})
@@ -131,7 +136,8 @@ def get_all():
 			'last_name' : student.last_name,
 			'gender': student.gender,
 			'absent' : student.status,
-			'sick' : student.sick})
+			'sick' : student.sick,
+			'present' : student.present})
 
 	with open('students.json','w') as file:
 		json.dump(json_arr,file)
