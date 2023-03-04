@@ -44,6 +44,16 @@ function validate() {
     return valStatus
  }
 
+ function validatePresent(status1, status2){
+    let valStatus = 0
+    if(status1 == false || status2 == false){
+        valStatus = 1
+    }else{
+        valStatus = 0
+    }
+    return valStatus
+ }
+
 
 theForm.addEventListener("click", (event) => {
     event.preventDefault();
@@ -79,7 +89,8 @@ theForm.addEventListener("click", (event) => {
             gender : gender.value,
             absent : validateAbsent(arrivalState.checked),
             sick : validateAbsent(Sick.checked),
-            gender : gender.value
+            gender : gender.value,
+            present : validatePresent(arrivalState.checked, Sick.checked)
         }
 
        studentData = studentDataObj

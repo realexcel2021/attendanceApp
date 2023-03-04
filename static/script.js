@@ -8,17 +8,20 @@ document.getElementById("stats-button").style.display = "none"
 let Students = []
 
 fetch("/students.json")
-    .then(response => response.json().then(response => {
-      Students = response
-      createElements(Students)
-      document.querySelector("#absent--daysnum").innerHTML = Students.length
-      document.querySelector("#attendance--daysnum").innerHTML = totalDays
-
-      let maleList =  Students.filter(obj => obj.gender == "Male");
-      let femaleList = Students.filter(obj => obj.gender == "Female");
-
-      donut(maleList.length, femaleList.length)
-    }))
+    .then(response => {
+      response.json().then(response => {
+        console.log(response)
+        Students = response
+        createElements(Students)
+        document.querySelector("#absent--daysnum").innerHTML = Students.length
+        document.querySelector("#attendance--daysnum").innerHTML = totalDays
+  
+        let maleList =  Students.filter(obj => obj.gender == "Male");
+        let femaleList = Students.filter(obj => obj.gender == "Female");
+  
+        donut(maleList.length, femaleList.length)
+      })
+    })
 
 function donut (present, absent) {
   bindto: "#donut"
