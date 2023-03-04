@@ -69,7 +69,12 @@ def handle_options():
 def admin():
 	if request.method == 'GET':
 		return render_template('adminPage.html')
-	
+
+@app.route('/search-line.png',methods=['GET'])
+def send_png():
+	return send_from_directory('.','search-line.png')
+
+
 @app.route('/success',methods=['GET'])
 def success():
 	if request.method=='GET':
