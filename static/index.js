@@ -9,20 +9,12 @@ const submitButton = document.getElementById("submitAttendance")
 const Sick = document.getElementById("sick")
 
 document.getElementById("adminLogin").addEventListener("click", () => {
-    window.location.href = "/login.html"
+    window.location.href = "/login"
 })
 
 checkOut.style.display = "none"
 
 let studentData = null;
-
-var data = {
-    name : "John Doe",
-    matric_num : "WWQQ123",
-    sex : "male",
-    absent : 1
-}
-
 
 function validate() {
     let status = true
@@ -107,8 +99,8 @@ submitButton.addEventListener("click", () => {
         }
       })
     .then((response) => {
-        window.location.href = "success.html"
         console.log(response)
+       
     })
     
 })

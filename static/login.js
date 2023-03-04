@@ -4,13 +4,23 @@ const login = document.getElementById("login")
 
 let authInfo = {}
 
+fetch('auth.json')
+  .then(Response => {
+    // use the parsed data here
+     Response.json().then(json => {
+        authInfo = json
+        console.log(authInfo)
+     })
+  })
+  .catch(error => console.error(error));
+
 function Validate (){
     let status = true
-    if(UserName.value == "" ){
+    if(UserName.value == "" || UserName.value != authInfo.admin.username){
         UserName.style.borderColor = "red"
         status = false
     }
-    if(password.value == ""){
+    if(password.value == "" || password.value != authInfo.admin.password){
         password.style.borderColor = "red"
         status = false
     }
@@ -19,22 +29,8 @@ function Validate (){
 }
 
 login.addEventListener("click", (event) => {
-    if(Validate()){
-
-        authInfo = {
-            user : UserName.value,
-            password : password.value
-        }
-
-        fetch('/login', {
-            method: 'POST',
-            body: JSON.stringify(authInfo),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-        .then((response) => {
-            console.log(response)
-        })
+    event.preventDefault()
+    if (Validate()){
+        window.location.href = "/admin"
     }
 })

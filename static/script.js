@@ -1,20 +1,32 @@
 var ulTag = document.getElementById("myUL")
-const totalDays = 120;
-let studentID = null
-let studentDetails = null
+const totalDays = 50;
 const totalAbsentDaysArray = []
 let totalAbsentDays = null
 
-fetch("/student.json")
-    .then(response => console.log(response))
+document.getElementById("stats-button").style.display = "none"
+
+let Students = []
+
+fetch("/students.json")
+    .then(response => response.json().then(response => {
+      Students = response
+      createElements(Students)
+      document.querySelector("#absent--daysnum").innerHTML = Students.length
+      document.querySelector("#attendance--daysnum").innerHTML = totalDays
+
+      let maleList =  Students.filter(obj => obj.gender == "Male");
+      let femaleList = Students.filter(obj => obj.gender == "Female");
+
+      donut(maleList.length, femaleList.length)
+    }))
 
 function donut (present, absent) {
   bindto: "#donut"
   chart = c3.generate({
     data: {
         columns: [
-            ['present', present],
-            ['absent', absent],
+            ['Male', present],
+            ['Female', absent],
         ],
         type : 'donut',
     },
@@ -41,48 +53,6 @@ function donut (present, absent) {
 }
 
 
-const Students = [
-  {
-    id : "QWE123",
-    name : "Gray",
-    matricNum : "QWE123",
-    absent : 12,
-    calledInSick : 9,
-    gender : "male"
-},
-{
-  id : "QWE124",
-  name : "Mark",
-  matricNum : "QWE124",
-  absent : 9,
-  calledInSick : 4,
-  gender : "male"
-},
-{
-  id : "QWE125",
-  name : "David John",
-  matricNum : "QWE125",
-  absent : 50,
-  calledInSick : 8,
-  gender : "male"
-},
-{
-  id : "QWE126",
-  name : "Sheri Davis",
-  matricNum : "QWE126",
-  absent : 4,
-  calledInSick : 0,
-  gender : "female"
-},
-{
-  id : "QWE127",
-  name : "Duke Mark",
-  matricNum : "QWE127",
-  absent : 120,
-  calledInSick : 0,
-  gender : "female"
-}
-]
 
 Students.forEach((item) => {
   totalAbsentDaysArray.push(item.absent)
@@ -92,35 +62,40 @@ totalAbsentDaysArray.forEach(item => {
     totalAbsentDays += item
 })
 
-console.log(totalAbsentDays)
 
-Students.forEach((item) => {
-  let listItem = document.createElement("li");
-  listItem.id = item.matricNum;
+function createElements(studentList) {
+  studentList.forEach((item) => {
+    let listItem = document.createElement("li");
+    listItem.id = item.matricNum;
+  
+    let eachItem = document.createElement("a");
+    eachItem.innerText = item.matricNum
+    listItem.appendChild(eachItem)
+    ulTag.appendChild(listItem)
+    document.getElementById(listItem.id).onclick = () => {
+      let studentID = listItem.id
+          document.getElementById("myUL").style.display = "none" 
+          document.getElementById("stats-button").style.display = ""
+      console.log(studentID)
+  
+      if (studentID){
+      let studentDetails = studentList.find((obj) => obj.id === studentID);
+      const name = studentDetails.first_name + " " + studentDetails.last_name
 
-  let eachItem = document.createElement("a");
-  eachItem.innerText = item.matricNum
-  listItem.appendChild(eachItem)
-  ulTag.appendChild(listItem)
-  document.getElementById(listItem.id).onclick = () => {
-    studentID = listItem.id
-        document.getElementById("myUL").style.display = "none" 
-    console.log(studentID)
-
-    if (studentID){
-     studentDetails = Students.find((obj) => obj.id === studentID);
-     document.querySelector(".attendance").innerHTML = "Attendance Details for " + studentDetails.name;
-     document.querySelector("#absent--daysnum").innerHTML = studentDetails.absent;
-     document.querySelector("#absent--text").innerHTML = "Days " + studentDetails.name + " was absent";
-     document.querySelector("#sick--text").innerHTML = "Days " + studentDetails.name + " was sick"
-     document.querySelector("#sick--daysnum").innerHTML = studentDetails.calledInSick
-     document.querySelector(".rate").innerHTML = "Rate at which " + studentDetails.name + " Attend Class"
-     let totalAbsent = studentDetails.absent + studentDetails.calledInSick
-     pieChart(totalDays - totalAbsent, studentDetails.absent, studentDetails.calledInSick)
-
-  }
-  }
-})
+       document.querySelector(".attendance").innerHTML = "Attendance Details for " + name;
+       document.querySelector("#absent--daysnum").innerHTML = studentDetails.absent + studentDetails.sick;
+       document.querySelector("#absent--text").innerHTML = "Days " + name + " was absent";
+       document.querySelector("#sick--text").innerHTML = "Days " + name + " was sick"
+       document.querySelector("#sick--daysnum").innerHTML = studentDetails.sick
+       document.querySelector(".rate").innerHTML = "Rate at which " + name + " Attend Class"
+       let totalAbsent = studentDetails.absent + studentDetails.sick
+       pieChart(totalDays - totalAbsent, studentDetails.absent, studentDetails.sick)
+  
+    }
+    }
+  })
+  
+}
 
 function myFunction() {
 
@@ -153,4 +128,4 @@ document.getElementById("myInput").onfocus = () =>{
 // document.getElementById("myInput").onblur = () => document.getElementById("myUL").style.display = "none"
 document.getElementById("myInput").onkeyup = () => myFunction()
 
-donut(totalDays, totalAbsentDays)
+

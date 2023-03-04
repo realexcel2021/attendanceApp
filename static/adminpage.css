@@ -146,3 +146,25 @@ a:hover{
     text-align: center;
     font-size: large;
 }
+
+#stats-button{
+    text-align: center;
+    margin-top: 30px;
+}
+
+#stats-button a{
+    padding: 15px;
+    color: white;
+    border: none;
+    background-color: green;
+    font-size: larger;
+    border-radius: 2px;
+    transition-duration: 500ms;
+    text-decoration: none;
+}
+
+#stats-button a:hover{
+    color: green;
+    background-color: white;
+    border: 2px solid green;
+}
