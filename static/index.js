@@ -45,10 +45,10 @@ function validate() {
  }
 
  function validatePresent(status1, status2){
-    let valStatus = 0
+    console.log(status1)
+    console.log(status2)
+    let valStatus = 1
     if(status1 == false || status2 == false){
-        valStatus = 1
-    }else{
         valStatus = 0
     }
     return valStatus
