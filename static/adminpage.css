@@ -114,7 +114,7 @@ a:hover{
     margin-bottom: 10px;
 }
 
-#attendance--daysnum{
+#present{
     font-weight: bold;
 }
 
@@ -134,6 +134,17 @@ a:hover{
     justify-content: space-between;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+#present--days{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#present--daysnum{
+    font-weight: bold;
 }
 
 #absent--daysnum{

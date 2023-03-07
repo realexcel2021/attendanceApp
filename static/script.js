@@ -8,20 +8,18 @@ document.getElementById("stats-button").style.display = "none"
 let Students = []
 
 fetch("/students.json")
-    .then(response => {
-      response.json().then(response => {
-        console.log(response)
-        Students = response
-        createElements(Students)
-        document.querySelector("#absent--daysnum").innerHTML = Students.length
-        document.querySelector("#attendance--daysnum").innerHTML = totalDays
-  
-        let maleList =  Students.filter(obj => obj.gender == "Male");
-        let femaleList = Students.filter(obj => obj.gender == "Female");
-  
-        donut(maleList.length, femaleList.length)
-      })
-    })
+    .then(response => response.json().then(response => {
+      Students = response
+      console.log(Students)
+      createElements(Students)
+      document.querySelector("#absent--daysnum").innerHTML = Students.length
+      document.querySelector("#attendance--daysnum").innerHTML = totalDays
+
+      let maleList =  Students.filter(obj => obj.gender == "Male");
+      let femaleList = Students.filter(obj => obj.gender == "Female");
+
+      donut(maleList.length, femaleList.length)
+    }))
 
 function donut (present, absent) {
   bindto: "#donut"
@@ -55,7 +53,7 @@ function donut (present, absent) {
 });
 }
 
-
+const test = () => document.getElementById("present").textContent = "hi2"
 
 Students.forEach((item) => {
   totalAbsentDaysArray.push(item.absent)
@@ -85,15 +83,17 @@ function createElements(studentList) {
       let studentDetails = studentList.find((obj) => obj.id === studentID);
       const name = studentDetails.first_name + " " + studentDetails.last_name
 
+      
        document.querySelector(".attendance").innerHTML = "Attendance Details for " + name;
        document.querySelector("#absent--daysnum").innerHTML = studentDetails.absent + studentDetails.sick;
-       document.querySelector("#absent--text").innerHTML = "Days " + name + " was absent";
+       document.querySelector("#absent--text").innerHTML = "Total Days " + name + " was absent";
        document.querySelector("#sick--text").innerHTML = "Days " + name + " was sick"
-       document.querySelector("#sick--daysnum").innerHTML = studentDetails.sick
+       document.querySelector("#sick--daysnum").innerHTML = studentDetails.sick 
+       document.querySelector("#present--text").innerHTML = "Total Days " + name + " was Present"
+       document.querySelector("#present").innerHTML = totalDays - (studentDetails.sick + studentDetails.absent)
        document.querySelector(".rate").innerHTML = "Rate at which " + name + " Attend Class"
        let totalAbsent = studentDetails.absent + studentDetails.sick
        pieChart(totalDays - totalAbsent, studentDetails.absent, studentDetails.sick)
-  
     }
     }
   })
