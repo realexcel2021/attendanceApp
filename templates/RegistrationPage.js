@@ -20,35 +20,44 @@ radio_geds_002 = document.getElementsByName("yes-geds_002")
 submitButton.onclick = () => {
 
     let arr = [radio_geds_420, radio_itgy_402, radio_geds_400, radio_itgy_408, radio_itgy_312, radio_itgy_406, radio_cosc_430, radio_geds_002]
+    let pushobj = {}
 
     const  validateForm = () => {
+        let response = false
+
         if(fName.value == ""){
             fName.style.borderColor = "red"
-            return false
+            response = false
+        }else{
+            pushobj = {
+                ...pushobj,
+                fName : fName.value
+            }
         } 
         if(lName.value==""){
-            lName.style.borderColor = "red"
-            return false
-        } 
+            lName.style.borderColor = "red"  
+            response = false
+        }else{
+            pushobj = {
+                ...pushobj,
+                lName : lName.value
+            }
+            
+        }
         if(matricNum.value == ""){
             matricNum.style.borderColor = "red" 
-            return false
-        }else {
-            return true
+            response = false 
+        }else{
+            pushobj = {
+                ...pushobj,
+                matricNum : matricNum.value
+            }
+            response = true
         }
+
     }
 
-    console.log(validateForm())
-
-    if(fName.value == ""){
-        fName.style.borderColor = "red"
-    } 
-    if(lName.value==""){
-        lName.style.borderColor = "red"  
-    } 
-    if(matricNum.value == ""){
-        matricNum.style.borderColor = "red"  
-    }
+    validateForm()
 
     let validateCourses = (val) => {
         if(val == "Yes"){
@@ -57,8 +66,6 @@ submitButton.onclick = () => {
             return false
         }
     }
-
-    let pushobj = {}
 
     arr.forEach((each) => {
         for(let i=0; i < each.length; i++){
@@ -70,11 +77,18 @@ submitButton.onclick = () => {
                     ...pushobj,
                     [key] : validateCourses(obj)
                 }
-                console.log(pushobj)
                 
             }
         }
     })
+
+    if(validateForm()){
+        fetch("/register", {
+            method : "POST",
+            body : JSON.stringify(pushobj)
+        }).then(response => response.json)
+        .then(data => console.log(data))
+    }
 
 }
 

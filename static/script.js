@@ -136,6 +136,22 @@ inputField.onkeyup = (e) => {
 
 }
 
+let downloadButton = document.querySelector("#download")
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'test.csv', true);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4 && xhr.status === 200) {
+    var csv = xhr.responseText;
+    // Convert the CSV to XLSX
+    var workbook = XLSX.utils.book_new();
+    var worksheet = XLSX.utils.csv_to_sheet(csv);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    XLSX.writeFile(workbook, 'output.xlsx');
+  }
+};
+xhr.send();
+
 
 function myFunction() {
 
