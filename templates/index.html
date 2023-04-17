@@ -4,60 +4,52 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="./output.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <title> Attendance Form </title>
+    <title> Mark Attendance </title>
 </head>
 <body>
-   <div class="app">
-        <button id="adminLogin"> Login As Admin </button>
-    <h1>Attendance Form</h1>
-    <form>
-        <input id="input-text" type="text" placeholder="Enter Student First Name" required/>
-        <input id="input-text-1" type="text" placeholder="Enter Student Last Name" required/>
-        <input id="input-text-2" type="text" placeholder="Enter Student Matriculation Number" required/>
-
-        <label>select student's gender</label>
-        <select id="gender">
-            <option>Male</option>
-            <option>Female</option>
-        </select>
-        <div id="absent1">
-            <input type="checkbox" id="absent">
-            <label> Mark Student Absent </label>
+    <header class="px-7 py-3 bg-green-color flex justify-between">
+        <h1 class="uppercase text-2xl text-white font-semibold"> Mark student attendance </h1>
+        <div class="text-green-color flex space-x-5 items-center">
+            <a class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer"> Login As Admin </a>
+            <a class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer"> Register a Student </a>
         </div>
-        <div id="sick1">
-            <input type="checkbox" id="sick">
-            <label> Mark Student Sick </label>
+    </header>
+
+    <div class="mx-5">
+        <div class="my-5 mx-10 flex space-x-5">
+            <input type="text" placeholder="Enter Matriculation Number" class="px-5 py-2 w-[300px] border outline-none "/>
+            <button class="uppercase px-5 py-2 bg-green-color text-white rounded hover:bg-white hover:text-green-color hover:border-green-color border transition duration-300 hover:scale-90"> Validate Matric Number</button>
         </div>
-        <button type="button" id="form"> CheckOut Attendance </button>
-    </form>
+        <hr />
 
-    <div id="checkout">
-
-        <h1 id="names"></h1>
-
-        <div class="details">
-            <p>Matriculation Number</p>
-         <p id="matric"></p>
+        <div class=" text-center">
+            <h2 class="text-2xl uppercase text-green-color font-semibold text-center pt-5"> Attendance form for Sheriff </h2>
+            <p class="text-xl mt-5 text-gray-600"> Select Course to mark attendance</p>
+            <select class="border mt-5 px-5 text-xl text-green-color outline-none border-green-color w-[300px]">
+                    <option>GEDS 420</option>
+                    <option> ITGY 402 </option>
+                    <option> GEDS 400 </option>
+                    <option> ITGY 408 </option>
+                    <option> ITGY 312 </option>
+                    <option> ITGY 406 </option>
+                    <option> COSC 430 </option>
+                    <option> GEDS 002 </option>
+                    <option> GEDS 400 </option>
+            </select>
+            <div class="flex justify-center mt-5 space-x-4 text-xl">
+                <input type="radio" name="attendance">Present</input>
+                <input type="radio" name="attendance">Absent</input>
+                <input type="radio" name="attendance">Sick</input>
+            </div>
+            <button class="my-3 px-5 py-2 text-white font-medium bg-green-color rounded uppercase hover:text-green-color hover:bg-white border-green-color border transition duration-300 hover:scale-105"> Submit Attendance </button>
         </div>
+        
 
-       <div class="details">
-        <p >Gender</p>
-         <p id="genderText"> </p>
-       </div>
-
-        <div class="details">
-            <p> Status </p>
-            <p id="absentText"></p>
-        </div>
-        <div class="details">
-            <p> Health Status </p>
-            <p id="sickText"></p>
-        </div>
-        <button id="submitAttendance"> Submit Attendance </button>
     </div>
-    <script src="../static/index.js"></script>
-   </div>
+       <script src="../static/index.js"></script>
+
+  
 </body>
 </html>

@@ -4,15 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="./output.css">
     <title>Login</title>
 </head>
 <body>
-    <div class="Login">
-        <h1> Login as Admin </h1>
-        <input id="input-user" type="text" placeholder="UserName"/>
-        <input id="input-userP" type="password" placeholder="PassWord"/>
-        <button id="login"> Login </button>
+    <header class="bg-green-color px-10 py-3 flex justify-between">
+        <h1 class=" text-white text-2xl uppercase font-semibold cursor-pointer"> Login Page</h1>
+        <div class="text-green-color flex space-x-5 items-center">
+            <a class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer"> Mark an Attendance </a>
+        </div>
+    </header>
+    <div class="text-center border mx-10 my-5">
+        <h1 class="text-green-color uppercase text-2xl font-semibold my-3"> Login as Admin </h1>
+        <input id="input-user" class="mx-auto border my-3 w-[400px] px-3 py-2 outline-green-color text-xl text-green-color rounded" type="text" placeholder="UserName"/>
+        <input id="input-userP" class="block mx-auto border my-3 w-[400px] px-3 py-2 outline-green-color text-xl text-green-color rounded" type="password" placeholder="PassWord"/>
+        <button id="login" class="block mx-auto bg-green-color text-white font-semibold px-20 py-3 mb-4 rounded text-xl hover:text-green-color hover:bg-white hover:border hover:border-green-color transition duration-300 ease-in hover:scale-105"> Login </button>
     </div>
     <script src="../static/login.js"></script>
 </body>

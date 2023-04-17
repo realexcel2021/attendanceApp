@@ -100,6 +100,43 @@ function createElements(studentList) {
   
 }
 
+let inputField = document.querySelector("#myInput")
+let listBox = document.querySelector("#list")
+
+let suggestion = [
+  "QQQ12",
+  "QW13T",
+  "JTW12",
+  "TYP14"
+]
+
+function showData(list){
+  let listData
+    if(!list.length){
+        listData = ""
+    }else{
+      listData = list.join(" ")
+    }
+    listBox.innerHTML = listData
+}
+
+inputField.onkeyup = (e) => {
+  let search = e.target.value
+  let valueR = []
+
+  if(search){
+    valueR = suggestion.filter( (data) => {
+      return data.toLocaleLowerCase().startsWith(search.toLocaleLowerCase())
+  })
+    valueR = valueR.map((data) => {
+      return data = "<li" + " " + "class=" + `"list-none w-[400px] border shadow rounded mx-auto my-2 text-xl text-green-color py-2 cursor-pointer"` + ">" + data + "</li>"
+    })
+  }
+  showData(valueR)
+
+}
+
+
 function myFunction() {
 
     var input, filter, ul, li, a, i, txtValue;
