@@ -16,6 +16,19 @@ radio_itgy_406 = document.getElementsByName("yes-itgy_406")
 radio_cosc_430 = document.getElementsByName("yes-cosc_430")
 radio_geds_002 = document.getElementsByName("yes-geds_002")
 
+function NotificationBar(){
+    let Notification = document.getElementById("notification")
+    Notification.style.display = 'block'
+
+    if(Notification.style.opacity == '0'){
+        Notification.style.opacity = '1'
+    }
+
+    setTimeout(() => {
+        let Notification = document.getElementById("notification")
+        Notification.style.opacity = "0"
+       }, 3000);
+}
 
 submitButton.onclick = () => {
 
@@ -86,7 +99,10 @@ submitButton.onclick = () => {
         fetch("/register", {
             method : "POST",
             body : JSON.stringify(pushobj)
-        }).then(response => response.json)
+        }).then(response => {
+            response.json
+            NotificationBar()
+        })
         .then(data => console.log(data))
     }
 
