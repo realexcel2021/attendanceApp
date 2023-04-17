@@ -1,6 +1,6 @@
 let matricNum, fName, lName, submitButton
 let radio_geds_420, radio_itgy_402, radio_geds_400, radio_itgy_408, radio_itgy_312, radio_itgy_406
-let radio_cosc_430, radio_geds_002
+let radio_cosc_430, radio_geds_002, gender
 
 fName = document.getElementById("input--fName")
 lName = document.getElementById("input--lName")
@@ -15,6 +15,9 @@ radio_itgy_312 = document.getElementsByName("yes-itgy_312")
 radio_itgy_406 = document.getElementsByName("yes-itgy_406")
 radio_cosc_430 = document.getElementsByName("yes-cosc_430")
 radio_geds_002 = document.getElementsByName("yes-geds_002")
+gender = document.getElementsByName("gender")
+
+
 
 function Reset(){
     fName.value = ""
@@ -49,6 +52,19 @@ submitButton.onclick = () => {
 
     let arr = [radio_geds_420, radio_itgy_402, radio_geds_400, radio_itgy_408, radio_itgy_312, radio_itgy_406, radio_cosc_430, radio_geds_002]
     let pushobj = {}
+
+    function getGender(){
+        for(let i=0; i < gender.length; i++){
+            if(gender[i].checked){
+                pushobj = {
+                    ...pushobj,
+                    gender : gender[i].value
+                }
+            }
+        }
+    }
+
+    getGender()
 
     const  validateForm = () => {
         let response = false
@@ -119,9 +135,10 @@ submitButton.onclick = () => {
             NotificationBar()
             Reset()
         })
-        .then(data => console.log(data))
+        .then(data => console.log(data))   
         
+        NotificationBar()
+        Reset()
     }
-
 }
 
