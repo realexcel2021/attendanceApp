@@ -16,6 +16,21 @@ radio_itgy_406 = document.getElementsByName("yes-itgy_406")
 radio_cosc_430 = document.getElementsByName("yes-cosc_430")
 radio_geds_002 = document.getElementsByName("yes-geds_002")
 
+function Reset(){
+    fName.value = ""
+    lName.value = ""
+    matricNum.value = ""
+
+    let arr = [radio_geds_420, radio_itgy_402, radio_geds_400, radio_itgy_408, radio_itgy_312, radio_itgy_406, radio_cosc_430, radio_geds_002]
+    
+    arr.forEach((eachInput) => {
+        for(let i=0; i < eachInput.length; i++){
+            eachInput[i].checked = false
+        }
+    })
+
+}
+
 function NotificationBar(){
     let Notification = document.getElementById("notification")
     Notification.style.display = 'block'
@@ -67,7 +82,7 @@ submitButton.onclick = () => {
             }
             response = true
         }
-
+        return response
     }
 
     validateForm()
@@ -102,8 +117,10 @@ submitButton.onclick = () => {
         }).then(response => {
             response.json
             NotificationBar()
+            Reset()
         })
         .then(data => console.log(data))
+        
     }
 
 }
