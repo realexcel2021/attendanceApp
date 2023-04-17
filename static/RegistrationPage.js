@@ -32,6 +32,10 @@ function Reset(){
         }
     })
 
+    for(let i=0; i < gender.length; i++){
+        gender[i].checked = false
+    }
+
 }
 
 function NotificationBar(){
@@ -137,8 +141,6 @@ submitButton.onclick = () => {
         })
         .then(data => console.log(data))   
         
-        NotificationBar()
-        Reset()
     }
 }
 
