@@ -13,21 +13,24 @@
         <h1 class="uppercase text-2xl text-white font-semibold"> Mark student attendance </h1>
         <div class="text-green-color flex space-x-5 items-center">
             <a class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer" href="/login"> Login As Admin </a>
-            <a class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer" href="/register"> Register a Student </a>
         </div>
     </header>
 
+    <div class="bg-green-color w-[400px] fixed my-4 rounded top-36 right-5 shadow-xl transition ease-linear duration-500 hidden" id="notification">
+        <p id="text" class="text-white px-5 py-3 text-xl"> <strong> INFO: </strong> Attendance Marked Succesfully </p>
+    </div>
+
     <div class="mx-5">
         <div class="my-5 mx-10 flex space-x-5">
-            <input type="text" placeholder="Enter Matriculation Number" class="px-5 py-2 w-[300px] border outline-none "/>
-            <button class="uppercase px-5 py-2 bg-green-color text-white rounded hover:bg-white hover:text-green-color hover:border-green-color border transition duration-300 hover:scale-90"> Validate Matric Number</button>
+            <input id="matric" type="text" placeholder="Enter Matriculation Number" class="px-5 py-2 w-[300px] border outline-none "/>
+            <button id="validate" class="uppercase px-5 py-2 bg-green-color text-white rounded hover:bg-white hover:text-green-color hover:border-green-color border transition duration-300 hover:scale-90 disabled:bg-gray-600 disabled:hover:cursor-not-allowed disabled:hover:text-white disabled:hover:scale-100"> Validate Matric Number</button>
         </div>
         <hr />
 
-        <div class=" text-center">
+        <div id="attendanceForm" class=" text-center transition duration-500">
             <h2 class="text-2xl uppercase text-green-color font-semibold text-center pt-5"> Attendance form for Sheriff </h2>
             <p class="text-xl mt-5 text-gray-600"> Select Course to mark attendance</p>
-            <select class="border mt-5 px-5 text-xl text-green-color outline-none border-green-color w-[300px]">
+            <select id="selectedOpt" class="border mt-5 px-5 text-xl text-green-color outline-none border-green-color w-[300px]">
                     <option>GEDS 420</option>
                     <option> ITGY 402 </option>
                     <option> GEDS 400 </option>
@@ -39,11 +42,11 @@
                     <option> GEDS 400 </option>
             </select>
             <div class="flex justify-center mt-5 space-x-4 text-xl">
-                <input type="radio" name="attendance">Present</input>
-                <input type="radio" name="attendance">Absent</input>
-                <input type="radio" name="attendance">Sick</input>
+                <input type="radio" name="attendance" value="Present">Present</input>
+                <input type="radio" name="attendance" value="Absent">Absent</input>
+                <input type="radio" name="attendance" value="Sick">Sick</input>
             </div>
-            <button class="my-3 px-5 py-2 text-white font-medium bg-green-color rounded uppercase hover:text-green-color hover:bg-white border-green-color border transition duration-300 hover:scale-105"> Submit Attendance </button>
+            <button id="submit" class="my-3 px-5 py-2 text-white font-medium bg-green-color rounded uppercase hover:text-green-color hover:bg-white border-green-color border transition duration-300 hover:scale-105"> Submit Attendance </button>
         </div>
         
 

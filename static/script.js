@@ -6,20 +6,30 @@ let totalAbsentDays = null
 document.getElementById("stats-button").style.display = "none"
 
 let Students = []
+let suggestion = []
 
 fetch("/students.json")
-    .then(response => response.json().then(response => {
-      Students = response
+    .then(response => response.json())
+    .then(data => {
+      Students = data
       console.log(Students)
-      createElements(Students)
-      document.querySelector("#absent--daysnum").innerHTML = Students.length
-      document.querySelector("#attendance--daysnum").innerHTML = totalDays
+      for(let i=0; i < Students.length; i++){
+        suggestion.push(Students[i]['matricNum'])
+    }
+    
+     let number_of_males = Students.filter(item => {
+      return item.gender == "Male"
+    })
 
-      let maleList =  Students.filter(obj => obj.gender == "Male");
-      let femaleList = Students.filter(obj => obj.gender == "Female");
+    let number_of_females = Students.filter(item => {
+      return item.gender == "Female"
+    })
 
-      donut(maleList.length, femaleList.length)
-    }))
+    console.log(suggestion)
+    console.log(number_of_males.length)
+    console.log(number_of_females.length)
+    donut(number_of_males.length, number_of_females.length)
+    })
 
 function donut (present, absent) {
   bindto: "#donut"
@@ -37,6 +47,7 @@ function donut (present, absent) {
   });
  }
 
+
  function pieChart(d1, d2, d3){
   bindto: "#chart"
   var chart = c3.generate({
@@ -53,8 +64,6 @@ function donut (present, absent) {
 });
 }
 
-const test = () => document.getElementById("present").textContent = "hi2"
-
 Students.forEach((item) => {
   totalAbsentDaysArray.push(item.absent)
 })
@@ -64,51 +73,8 @@ totalAbsentDaysArray.forEach(item => {
 })
 
 
-function createElements(studentList) {
-  studentList.forEach((item) => {
-    let listItem = document.createElement("li");
-    listItem.id = item.matricNum;
-  
-    let eachItem = document.createElement("a");
-    eachItem.innerText = item.matricNum
-    listItem.appendChild(eachItem)
-    ulTag.appendChild(listItem)
-    document.getElementById(listItem.id).onclick = () => {
-      let studentID = listItem.id
-          document.getElementById("myUL").style.display = "none" 
-          document.getElementById("stats-button").style.display = ""
-      console.log(studentID)
-  
-      if (studentID){
-      let studentDetails = studentList.find((obj) => obj.id === studentID);
-      const name = studentDetails.first_name + " " + studentDetails.last_name
-
-      
-       document.querySelector(".attendance").innerHTML = "Attendance Details for " + name;
-       document.querySelector("#absent--daysnum").innerHTML = studentDetails.absent + studentDetails.sick;
-       document.querySelector("#absent--text").innerHTML = "Total Days " + name + " was absent";
-       document.querySelector("#sick--text").innerHTML = "Days " + name + " was sick"
-       document.querySelector("#sick--daysnum").innerHTML = studentDetails.sick 
-       document.querySelector("#present--text").innerHTML = "Total Days " + name + " was Present"
-       document.querySelector("#present").innerHTML = totalDays - (studentDetails.sick + studentDetails.absent)
-       document.querySelector(".rate").innerHTML = "Rate at which " + name + " Attend Class"
-       let totalAbsent = studentDetails.absent + studentDetails.sick
-       pieChart(totalDays - totalAbsent, studentDetails.absent, studentDetails.sick)
-    }
-    }
-  })
-  
-}
-
 let inputField = document.querySelector("#myInput")
 let listBox = document.querySelector("#list")
-
-let suggestion = [
-  "QQQ12",
-  "QW13T",
-  "JTW12",
-  "TYP14"
-]
 
 function showData(list){
   let listData
@@ -129,28 +95,53 @@ inputField.onkeyup = (e) => {
       return data.toLocaleLowerCase().startsWith(search.toLocaleLowerCase())
   })
     valueR = valueR.map((data) => {
-      return data = "<li" + " " + "class=" + `"list-none w-[400px] border shadow rounded mx-auto my-2 text-xl text-green-color py-2 cursor-pointer"` + ">" + data + "</li>"
+      return data = "<li" + " " + "class=" + `"list-none w-[400px] border shadow rounded mx-auto my-2 text-xl text-green-color py-2 cursor-pointer"` + `id="clicked"` + ">" + data + "</li>"
     })
   }
   showData(valueR)
+  let allList = document.querySelectorAll("li");
+  for (let i = 0; i < allList.length; i++) {
+    allList[i].setAttribute("onclick", "takeID(this)")
+    
+  }
+
+}
+
+function takeID(element){
+    const theID = element.textContent
+    const theStudent = Students.filter((studentID) => {
+      return studentID.id == theID
+    })
+
+    let name = theStudent[0].first_name + " " + theStudent[0].last_name
+
+    console.log(theStudent)
+    document.querySelector("#absent--daysnum").innerHTML = theStudent[0].absent + theStudent[0].sick;
+    document.querySelector("#absent--text").innerHTML = "Total Days " + name + " was absent";
+       document.querySelector("#sick--text").innerHTML = "Days " + name + " was sick"
+       document.querySelector("#sick--daysnum").innerHTML = theStudent[0].sick 
+       document.querySelector("#present--text").innerHTML = "Total Days " + name + " was Present"
+       document.querySelector("#present").innerHTML = totalDays - (theStudent[0].sick + theStudent[0].absent)
+       pieChart(totalDays - theStudent[0].absent, theStudent[0].absent, theStudent[0].sick)
+       document.querySelector("#rate").innerHTML = "Rate at which " + name + " Attend Class"
 
 }
 
 let downloadButton = document.querySelector("#download")
 
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'test.csv', true);
-xhr.onreadystatechange = function() {
-  if (xhr.readyState === 4 && xhr.status === 200) {
-    var csv = xhr.responseText;
-    // Convert the CSV to XLSX
-    var workbook = XLSX.utils.book_new();
-    var worksheet = XLSX.utils.csv_to_sheet(csv);
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    XLSX.writeFile(workbook, 'output.xlsx');
-  }
-};
-xhr.send();
+// var xhr = new XMLHttpRequest();
+// xhr.open('GET', 'test.csv', true);
+// xhr.onreadystatechange = function() {
+//   if (xhr.readyState === 4 && xhr.status === 200) {
+//     var csv = xhr.responseText;
+//     // Convert the CSV to XLSX
+//     var workbook = XLSX.utils.book_new();
+//     var worksheet = XLSX.utils.csv_to_sheet(csv);
+//     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+//     XLSX.writeFile(workbook, 'output.xlsx');
+//   }
+// };
+// xhr.send();
 
 
 function myFunction() {

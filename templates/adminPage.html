@@ -20,8 +20,8 @@
         <header class="bg-green-color px-5 py-3 flex justify-between">
             <h1 class="text-white text-2xl uppercase font-semibold"> Welcome to the admin page </h1>
             <div class="text-green-color flex space-x-5 items-center">
-                <a class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer"> Mark an Attendance </a>
-                <a class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer"> Register a Student </a>
+                <a href="/" class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer"> Mark an Attendance </a>
+                <a href="/register" class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer"> Register a Student </a>
                 <a id="download" class="bg-white px-3 py-2 rounded font-semibold transition hover:scale-105 cursor-pointer"> Download Statistics CSV <span> <i class="ri-download-2-line"></i> </span> </a>
             </div>
         </header>
@@ -69,7 +69,7 @@
         <div id="chart"></div>
         <div id="chart1"></div>
         <div id="donut"></div>
-        <p class="text-center text-2xl font-semibold text-green-color my-5"> Rate at which students Attend Class </p>
+        <p class="text-center text-2xl font-semibold text-green-color my-5" id="rate"> Rate at which students Attend Class </p>
 
         <script type="text/javascript" charset="utf-8" src="../static/script.js"></script>
     </div>

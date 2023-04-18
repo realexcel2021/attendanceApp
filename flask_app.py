@@ -14,31 +14,60 @@ app.secret_key = secret_key
 
 class Person(db.Model):
 	id = db.Column(db.Integer,primary_key = True)
-	matric_num = db.Column(db.String(10),nullable=False)
+	matric_num = db.Column(db.String(25),nullable=False)
 	first_name = db.Column(db.String(50),nullable=False)
 	last_name = db.Column(db.String(50),nullable=False)
 	gender = db.Column(db.String(10),nullable=False)
 	status = db.Column(db.Integer,default=0,nullable=False)
 	sick = db.Column(db.Integer,default=0,nullable=False)
 	present = db.Column(db.Integer,default=0,nullable=False)
+	courses = db.relationship('Courses', backref='person', lazy=True)
+
+
+class Courses(db.Model):
+	id=db.Column(db.Integer,primary_key=True)
+	matric_num = db.Column(db.String(25), db.ForeignKey('person.matric_num'))
+	GEDS_420 = db.Column(db.Integer,default=0)
+	GEDS_400 =db.Column(db.Integer,default=0)
+	ITGY_408 =db.Column(db.Integer,default=0)
+	ITGY_312 =db.Column(db.Integer,default=0)
+	ITGY_402 =db.Column(db.Integer,default=0)
+	ITGY_406 =db.Column(db.Integer,default=0)
+	COSC_430 =db.Column(db.Integer,default=0)
+	GEDS_002 =db.Column(db.Integer,default=0)
+	
+	def __repr__(self):
+		return str(self.COSC_430)
 
 @app.route('/',methods=['GET'])
 def index():
 	return render_template('index.html')
 
-@app.route('/people', methods=['POST'])
+
+
+
+@app.route('/register', methods=['GET','POST'])
 def create_student():
 	if not inspect(db.engine).has_table('person'):
 		db.create_all()
-		
-	data = request.get_json()
+	if request.method == 'GET':
+		return render_template("RegistrationPage.html")
+	data = request.get_data()
 	matric_num = data['matricNum']
-	first_name = str(data['name']).split()[0].title()
-	last_name = str(data['name']).split()[1].title()
+	first_name = data['fName'].strip().title()
+	last_name = data['lName'].strip().title()
 	gender = data['gender']
 	status = data['absent']
 	sick = data['sick']
 	present = data['present']
+	GEDS_420 = data['GEDS_420']
+	GEDS_400 =data['GEDS_400']
+	ITGY_408 =data['ITGY_408']
+	ITGY_312 =data['ITGY_312']
+	ITGY_402 =data['ITGY_402']
+	ITGY_406 =data['ITGY_406']
+	COSC_430 =data['COSC_430']
+	GEDS_002 = data['GEDS_002']
 
 	person = Person(
 	matric_num=matric_num,
@@ -48,16 +77,41 @@ def create_student():
 	status = status,
 	sick = sick,
 	present=present)
-
+	
+	courses=Courses(
+	matric_num=matric_num,
+	ITGY_402=ITGY_402,
+	GEDS_420=GEDS_420,
+	GEDS_400=GEDS_400,
+	ITGY_408=ITGY_408,
+	ITGY_312=ITGY_312,
+	ITGY_406=ITGY_406,
+	COSC_430=COSC_430,
+	GEDS_002=GEDS_002
+	)
+	print(courses)
 	exists=Person.query.filter_by(matric_num=matric_num).first()
 	if not exists:
 		db.session.add(person)
 		db.session.commit()
+		course=Courses.query.filter_by(matric_num=matric_num).first()
+		if not course:
+			db.session.add(courses)
+			db.session.commit()
 		return jsonify({'message': 'Person created successfully'})
 	else:
 		exists.status += status
 		exists.sick += sick
 		present += present
+		course.ITGY_402+=ITGY_402
+		course.GEDS_420+=GEDS_420
+		course.GEDS_400+=GEDS_400
+		course.ITGY_408+=ITGY_408
+		course.ITGY_312+=ITGY_312
+		course.ITGY_402+=ITGY_402
+		course.ITGY_406+=ITGY_406
+		course.COSC_430+=COSC_430
+		course.GEDS_002+=GEDS_002
 		db.session.commit()
 		return jsonify({'message': f"Student with matric {matric_num} already exists, attendance has been updated"})
 

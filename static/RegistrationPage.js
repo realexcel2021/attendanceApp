@@ -7,14 +7,14 @@ lName = document.getElementById("input--lName")
 matricNum = document.getElementById("input--matricNum")
 submitButton = document.getElementById("submit")
 
-radio_geds_420 = document.getElementsByName("yes-geds_420")
-radio_itgy_402 = document.getElementsByName("yes-itgy_402")
-radio_geds_400 = document.getElementsByName("yes-geds_400")
-radio_itgy_408 = document.getElementsByName("yes-itgy_408")
-radio_itgy_312 = document.getElementsByName("yes-itgy_312")
-radio_itgy_406 = document.getElementsByName("yes-itgy_406")
-radio_cosc_430 = document.getElementsByName("yes-cosc_430")
-radio_geds_002 = document.getElementsByName("yes-geds_002")
+radio_geds_420 = document.getElementsByName("GEDS_420")
+radio_itgy_402 = document.getElementsByName("ITGY_402")
+radio_geds_400 = document.getElementsByName("GEDS_400")
+radio_itgy_408 = document.getElementsByName("ITGY_408")
+radio_itgy_312 = document.getElementsByName("ITGY_312")
+radio_itgy_406 = document.getElementsByName("ITGY_406")
+radio_cosc_430 = document.getElementsByName("COSC_430")
+radio_geds_002 = document.getElementsByName("GEDS_002")
 gender = document.getElementsByName("gender")
 
 
@@ -133,14 +133,16 @@ submitButton.onclick = () => {
     if(validateForm()){
         fetch("/register", {
             method : "POST",
-            body : JSON.stringify(pushobj)
+            body : JSON.stringify(pushobj),
+            mode: "no-cors"
         }).then(response => {
-            response.json
+            response.json()
+            console.log(response.json())
             NotificationBar()
             Reset()
         })
         .then(data => console.log(data))   
-        
+        console.log(pushobj)
     }
 }
 

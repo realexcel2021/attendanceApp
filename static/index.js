@@ -1,117 +1,78 @@
-const theForm = document.getElementById("form")
-var fname = document.getElementById("input-text")
-var lName = document.getElementById("input-text-1")
-var matricNum = document.getElementById("input-text-2")
-var gender = document.getElementById("gender")
-let arrivalState =  document.getElementById("absent")
-const checkOut = document.getElementById("checkout")
-const submitButton = document.getElementById("submitAttendance")
-const Sick = document.getElementById("sick")
+let Option, Validate, attendanceForm, submitButton, radioButton, matricNum, Notification
 
-document.getElementById("adminLogin").addEventListener("click", () => {
-    window.location.href = "/login"
-})
+Validate = document.getElementById("validate")
+attendanceForm = document.getElementById("attendanceForm")
+Option = document.getElementById("selectedOpt")
+submitButton = document.getElementById("submit")
+radioButton = document.getElementsByName("attendance")
+matricNum = document.getElementById("matric")
+Notification = document.getElementById("notification");
 
-checkOut.style.display = "none"
-
-let studentData = null;
-
-function validate() {
-    let status = true
-    if(fname.value == ''){
-        fname.style.borderColor = 'red'
-        status = false
+function NotificationBar(form){
+    if(Notification.style.opacity == '0'){
+        Notification.style.opacity = '1'
     }
-    if( lName.value == ''){
-        lName.style.borderColor = 'red'
-        status = false
-    }
-    if(matricNum.value == ''){
-        matricNum.style.borderColor = 'red'
-        status = false
-    }
-    
-    return status
- }
 
- function validateAbsent(status){
-    let valStatus = null
-    if(status){
-        valStatus = 1
+    if(form){
+    Notification.style.display = 'block'
+    Notification.style.backgroundColor = '#044801'
+    document.getElementById("text").innerText = ' Attendance Marked Succesfully'
+
     }else{
-        valStatus = 0
+        Notification.style.display = 'block'
+        Notification.style.backgroundColor = 'red'
+        document.getElementById("text").innerText = 'An error Occured'
     }
-    return valStatus
- }
 
- function validatePresent(status1, status2){
-    console.log(status1)
-    console.log(status2)
-    let valStatus = 1
-    if(status1 == false || status2 == false){
-        valStatus = 0
+    setTimeout(() => {
+        let Notification = document.getElementById("notification")
+        Notification.style.opacity = "0"
+       }, 2000);
+}
+
+attendanceForm.style.opacity = "0"
+
+Validate.onclick = () => {
+    if(matricNum.value == ""){
+        NotificationBar(false)
+    }else{
+        Validate.disabled = true
+        attendanceForm.style.opacity = "1"
     }
-    return valStatus
- }
+}
 
-
-theForm.addEventListener("click", (event) => {
-    event.preventDefault();
-
-   if (validate()){
-        document.getElementById("names").innerText = fname.value + " " + lName.value;
-        document.getElementById("matric").innerText = matricNum.value;
-        document.getElementById("genderText").innerText = gender.value;
-        checkOut.style.display = ""
-
-        if(arrivalState.checked == true){
-            document.getElementById("absentText").innerText =  " Marked Absent"
-        }else{
-            document.getElementById("absentText").innerText =  " Marked Present"
+function validateForm () {
+    let stat = false
+    radioButton.forEach(element => {
+        if(element.checked){
+            stat = true
         }
+    });
+    return stat
+}
 
-        if(Sick.checked == true){
-            document.getElementById("sickText").innerText =  " Student Reported sick"
-            arrivalState.checked = false
-        }else{
-            document.getElementById("sickText").innerText =  " Student not Reported Sick"
+
+submitButton.onclick = () => {
+    console.log(validateForm())
+    NotificationBar(validateForm())
+
+    let submitObj = {}
+
+    for(let i=0; i < radioButton.length; i++){
+        if(radioButton[i].checked){
+            submitObj = {
+                ...submitObj,
+                attendanceStatus : radioButton[i].value 
+            }
         }
+    }
 
-        let firstName = fname.value;
-        let lastName = lName.value
-        let capitalizedfName = firstName[0].toUpperCase() + firstName.slice(1);
-        let capitalizedlName = lastName[0].toUpperCase() + lastName.slice(1);
+    submitObj = {
+        ...submitObj,
+        course : Option.value,
+        id : matricNum.value
+    }
 
-        let studentDataObj = {
-            id : matricNum.value.toUpperCase(),
-            name : capitalizedfName + " " + capitalizedlName,
-            matricNum : matricNum.value.toUpperCase(),
-            gender : gender.value,
-            absent : validateAbsent(arrivalState.checked),
-            sick : validateAbsent(Sick.checked),
-            gender : gender.value,
-            present : validatePresent(arrivalState.checked, Sick.checked)
-        }
+    console.log(submitObj)
 
-       studentData = studentDataObj
-
-        console.log(studentData)
-   }
-
-
-})
-
-submitButton.addEventListener("click", () => {
-    fetch('/people', {
-        method: 'POST',
-        body: JSON.stringify(studentData),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-    .then((response) => {
-        window.location.href = "/success"
-       
-    })
-    
-})
+}
