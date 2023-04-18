@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify,render_template, redirect, url_for,send_from_directory
+from flask import Flask, request, jsonify, render_template, redirect, url_for, send_from_directory
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
@@ -14,73 +14,105 @@ app.secret_key = secret_key
 
 class Person(db.Model):
 	id = db.Column(db.Integer,primary_key = True)
-	matric_num = db.Column(db.String(25),nullable=False)
+	courses=db.Relationship('Courses',backref='person')
+	matric_num = db.Column(db.String(20),nullable=False)
 	first_name = db.Column(db.String(50),nullable=False)
 	last_name = db.Column(db.String(50),nullable=False)
 	gender = db.Column(db.String(10),nullable=False)
-	status = db.Column(db.Integer,default=0,nullable=False)
-	sick = db.Column(db.Integer,default=0,nullable=False)
-	present = db.Column(db.Integer,default=0,nullable=False)
-	courses = db.relationship('Courses', backref='person', lazy=True)
-
-
 class Courses(db.Model):
-	id=db.Column(db.Integer,primary_key=True)
-	matric_num = db.Column(db.String(25), db.ForeignKey('person.matric_num'))
-	GEDS_420 = db.Column(db.Integer,default=0)
-	GEDS_400 =db.Column(db.Integer,default=0)
-	ITGY_408 =db.Column(db.Integer,default=0)
-	ITGY_312 =db.Column(db.Integer,default=0)
-	ITGY_402 =db.Column(db.Integer,default=0)
-	ITGY_406 =db.Column(db.Integer,default=0)
-	COSC_430 =db.Column(db.Integer,default=0)
-	GEDS_002 =db.Column(db.Integer,default=0)
-	
-	def __repr__(self):
-		return str(self.COSC_430)
+	id = db.Column(db.Integer,primary_key=True)
+	matric_num = db.Column(db.String(20),db.ForeignKey('person.matric_num'))
+	status = db.Column(db.Integer,default=0)
+	sick = db.Column(db.Integer,default=0)
+	present = db.Column(db.Integer,default=0)
+	ITGY_402 = db.Column(db.Boolean,nullable = False,default=0)
+	GEDS_420 = db.Column(db.Boolean,nullable = False,default=0)
+	GEDS_420 = db.Column(db.Boolean,nullable = False,default=0)
+	GEDS_400 = db.Column(db.Boolean,nullable = False,default=0)
+	ITGY_408 = db.Column(db.Boolean,nullable = False,default=0)
+	ITGY_312 = db.Column(db.Boolean,nullable = False,default=0)
+	ITGY_402 = db.Column(db.Boolean,nullable = False,default=0)
+	ITGY_406 = db.Column(db.Boolean,nullable = False,default=0)
+	COSC_430 = db.Column(db.Boolean,nullable = False,default=0)
+	GEDS_002 = db.Column(db.Boolean,nullable = False,default=0)
+	GEDS_400 = db.Column(db.Boolean,nullable = False,default=0)
+
+
+
+
 
 @app.route('/',methods=['GET'])
 def index():
 	return render_template('index.html')
 
+@app.route('/attendance',methods=['POST','GET'])
+def mark_attendance():
+	if request.method=='POST':
+		data = request.get_json()
+		matric_num = data['matricNum']
+		first_name = str(data['fName']).strip().title()
+		last_name = str(data['lName']).strip().title()
+		gender = data['gender']
+		ITGY_402 = data["yes-itgy_402"]
+		GEDS_420 = data['yes-geds_420']
+		GEDS_400 = data['yes-geds_400']
+		ITGY_408 = data["yes-itgy_408"]
+		ITGY_312 = data['yes-itgy_312']
+		ITGY_402 = data['yes-itgy_402']
+		ITGY_406 = data['yes-itgy_406']
+		COSC_430 = data['yes-cosc_430']
+		GEDS_002 = data['yes-geds_002']
+
+		person= Person(
+		matric_num=matric_num,
+		first_name=first_name,
+		last_name=last_name,
+		gender = gender)
+
+		courses=Courses(
+		matric_num=matric_num,
+		ITGY_402 =ITGY_402,
+		GEDS_420=GEDS_420,
+		GEDS_400=GEDS_400,
+		ITGY_408=ITGY_408,
+		ITGY_312=ITGY_312,
+		ITGY_406=ITGY_406,
+		COSC_430=COSC_430,
+		GEDS_002=GEDS_002
+		)
 
 
-
-@app.route('/register', methods=['GET','POST'])
+@app.route('/register', methods=['POST','GET'])
 def create_student():
+	if request.method=='GET':
+		return render_template('RegistrationPage.html')
 	if not inspect(db.engine).has_table('person'):
 		db.create_all()
-	if request.method == 'GET':
-		return render_template("RegistrationPage.html")
-	data = request.get_data()
+		
+	data = request.get_json()
 	matric_num = data['matricNum']
 	first_name = data['fName'].strip().title()
 	last_name = data['lName'].strip().title()
 	gender = data['gender']
-	status = data['absent']
-	sick = data['sick']
-	present = data['present']
+	ITGY_402 = data["ITGY_402"]
 	GEDS_420 = data['GEDS_420']
-	GEDS_400 =data['GEDS_400']
-	ITGY_408 =data['ITGY_408']
-	ITGY_312 =data['ITGY_312']
-	ITGY_402 =data['ITGY_402']
-	ITGY_406 =data['ITGY_406']
-	COSC_430 =data['COSC_430']
+	GEDS_400 = data['GEDS_400']
+	ITGY_408 = data["ITGY_408"]
+	ITGY_312 = data['ITGY_312']
+	ITGY_402 = data['ITGY_402']
+	ITGY_406 = data['ITGY_406']
+	COSC_430 = data['COSC_430']
 	GEDS_002 = data['GEDS_002']
 
-	person = Person(
+	person= Person(
 	matric_num=matric_num,
 	first_name=first_name,
 	last_name=last_name,
-	gender = gender,
-	status = status,
-	sick = sick,
-	present=present)
-	
+	gender = gender)
+
 	courses=Courses(
 	matric_num=matric_num,
-	ITGY_402=ITGY_402,
+	ITGY_402 =ITGY_402,
 	GEDS_420=GEDS_420,
 	GEDS_400=GEDS_400,
 	ITGY_408=ITGY_408,
@@ -89,31 +121,15 @@ def create_student():
 	COSC_430=COSC_430,
 	GEDS_002=GEDS_002
 	)
-	print(courses)
+
 	exists=Person.query.filter_by(matric_num=matric_num).first()
 	if not exists:
 		db.session.add(person)
+		db.session.add(courses)
 		db.session.commit()
-		course=Courses.query.filter_by(matric_num=matric_num).first()
-		if not course:
-			db.session.add(courses)
-			db.session.commit()
 		return jsonify({'message': 'Person created successfully'})
 	else:
-		exists.status += status
-		exists.sick += sick
-		present += present
-		course.ITGY_402+=ITGY_402
-		course.GEDS_420+=GEDS_420
-		course.GEDS_400+=GEDS_400
-		course.ITGY_408+=ITGY_408
-		course.ITGY_312+=ITGY_312
-		course.ITGY_402+=ITGY_402
-		course.ITGY_406+=ITGY_406
-		course.COSC_430+=COSC_430
-		course.GEDS_002+=GEDS_002
-		db.session.commit()
-		return jsonify({'message': f"Student with matric {matric_num} already exists, attendance has been updated"})
+		return jsonify({'message': f"Student with matric {matric_num} already exists"})
 
 login_details = ast.literal_eval(open('./static/auth.json').read())['admin']
 
@@ -198,6 +214,19 @@ def get_all():
 	with open('students.json','r') as json_out_file:
 		out=json.load(json_out_file)
 	return jsonify(out)
+
+
+def matric_format(matric:str) -> str:
+	alpha_buffer =""
+	num_buffer = ''
+	for i in matric:
+		try:
+			n = int(i)
+			num_buffer+=str(n)
+		except:
+			alpha_buffer += i
+	alpha_buffer=alpha_buffer.upper()
+	return alpha_buffer+num_buffer
 
 if __name__ == '__main__':
 	app.run(debug=True)
