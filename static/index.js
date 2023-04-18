@@ -33,11 +33,25 @@ function NotificationBar(form){
 attendanceForm.style.opacity = "0"
 
 Validate.onclick = () => {
+
     if(matricNum.value == ""){
         NotificationBar(false)
     }else{
-        Validate.disabled = true
-        attendanceForm.style.opacity = "1"
+        let theVal = { matricNum : matricNum.value }
+        console.log("The data to post")
+        console.log(theVal)
+        fetch("/", {
+            method : "POST",
+            body : JSON.stringify(theVal)
+        }).then((response) => {
+            response.json()
+            .then((data) => {
+                Validate.disabled = true
+                attendanceForm.style.opacity = "1"
+                console.log(data)
+            })
+            
+        })
     }
 }
 
