@@ -40,7 +40,7 @@ Validate.onclick = () => {
         let theVal = { matricNum : matricNum.value }
         console.log("The data to post")
         console.log(theVal)
-        fetch("/", {
+        fetch("/attendance", {
             method : "POST",
             body : JSON.stringify(theVal)
         }).then((response) => {
