@@ -137,12 +137,11 @@ submitButton.onclick = () => {
             headers : {"Content-Type":"application/json"},
         }).then(response => {
             response.json()
-            console.log(response.json())
             NotificationBar()
             Reset()
         })
         .then(data => console.log(data))   
-        console.log(pushobj)
+        
     }
 }
 
