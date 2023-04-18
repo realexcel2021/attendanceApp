@@ -134,7 +134,7 @@ submitButton.onclick = () => {
         fetch("/register", {
             method : "POST",
             body : JSON.stringify(pushobj),
-            mode: "no-cors"
+            headers : {"Content-Type":"application/json"},
         }).then(response => {
             response.json()
             console.log(response.json())
