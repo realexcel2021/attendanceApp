@@ -45,43 +45,40 @@ class Courses(db.Model):
 def index():
 	return render_template('index.html')
 
+
 @app.route('/attendance',methods=['POST','GET'])
 def mark_attendance():
 	if request.method=='POST':
 		data = request.get_json()
-		matric_num = data['matricNum']
-		first_name = str(data['fName']).strip().title()
-		last_name = str(data['lName']).strip().title()
-		gender = data['gender']
-		ITGY_402 = data["yes-itgy_402"]
-		GEDS_420 = data['yes-geds_420']
-		GEDS_400 = data['yes-geds_400']
-		ITGY_408 = data["yes-itgy_408"]
-		ITGY_312 = data['yes-itgy_312']
-		ITGY_402 = data['yes-itgy_402']
-		ITGY_406 = data['yes-itgy_406']
-		COSC_430 = data['yes-cosc_430']
-		GEDS_002 = data['yes-geds_002']
-
-		person= Person(
-		matric_num=matric_num,
-		first_name=first_name,
-		last_name=last_name,
-		gender = gender)
+		if len(data) == 1:
+			matric_num=data['matricNum']
+			exist=Courses.query.filter_by(matric_num=matric_num)
+			return jsonify({'message':int(bool(exist))})
+		matric_num = data['id']
+		course = '_'.join(data['course'].split())
+		status=1 if data['attendaceStatus']=='Present' else 0
 
 		courses=Courses(
 		matric_num=matric_num,
-		ITGY_402 =ITGY_402,
-		GEDS_420=GEDS_420,
-		GEDS_400=GEDS_400,
-		ITGY_408=ITGY_408,
-		ITGY_312=ITGY_312,
-		ITGY_406=ITGY_406,
-		COSC_430=COSC_430,
-		GEDS_002=GEDS_002
+		course=status
 		)
 
-
+	exist=db.query.filter_by(matric_num=matric_num).first()
+	if not exist:
+		return jsonify({'message':'No user found'})
+	else:
+		course_dict= {
+			"ITGY_402":"ITGY_402",
+			"GEDS_420":"GEDS_420",
+			"GEDS_400":"GEDS_400",
+			"ITGY_408":"ITGY_408",
+			"ITGY_312":"ITGY_312",
+			"ITGY_402":"ITGY_402",
+			"ITGY_406":"ITGY_406",
+			"COSC_430":"COSC_430",
+			"GEDS_002":"GEDS_002"
+		}
+		exist.course += status
 @app.route('/register', methods=['POST','GET'])
 def create_student():
 	if request.method=='GET':
