@@ -5,8 +5,12 @@ module.exports = {
     extend: {
       colors : {
         'green-color' : '#044801'
+      },
+      screens : {
+        'sm': {'max': '639px'}
       }
     },
+    
   },
   plugins: [],
 }

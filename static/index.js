@@ -40,18 +40,22 @@ Validate.onclick = () => {
         let theVal = { matricNum : matricNum.value }
         console.log("The data to post")
         console.log(theVal)
-        fetch("/attendance", {
-            method : "POST",
-            body : JSON.stringify(theVal)
-        }).then((response) => {
-            response.json()
-            .then((data) => {
-                Validate.disabled = true
-                attendanceForm.style.opacity = "1"
-                console.log(data)
-            })
+        attendanceForm.style.opacity = "1"
+        // fetch("/attendance", {
+        //     method : "POST",
+        //     body : JSON.stringify(theVal)
+        // }).then((response) => {
+        //     response.json()
+        //     .then((data) => {
+        //         Validate.disabled = true
+        //         attendanceForm.style.opacity = "1"
+        //         console.log(data)
+        //     })
             
-        })
+        // })
+        // .catch(() => {
+        //     NotificationBar(false)
+        // })
     }
 }
 
@@ -83,10 +87,25 @@ submitButton.onclick = () => {
 
     submitObj = {
         ...submitObj,
-        course : Option.value,
+        [Option.value] : 1,
         id : matricNum.value
     }
 
     console.log(submitObj)
+
+    fetch("/attendance", {
+        method: "POST",
+        headers : {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify(submitObj)
+    })
+    .then(response => {
+        response.json()
+        .then(data => console.log(data))
+    })
+    .catch(() => {
+        NotificationBar(false)
+    })
 
 }
