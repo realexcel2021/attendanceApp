@@ -40,22 +40,21 @@ Validate.onclick = () => {
         let theVal = { matricNum : matricNum.value }
         console.log("The data to post")
         console.log(theVal)
-        attendanceForm.style.opacity = "1"
-        // fetch("/attendance", {
-        //     method : "POST",
-        //     body : JSON.stringify(theVal)
-        // }).then((response) => {
-        //     response.json()
-        //     .then((data) => {
-        //         Validate.disabled = true
-        //         attendanceForm.style.opacity = "1"
-        //         console.log(data)
-        //     })
+        fetch("/attendance", {
+            method : "POST",
+            body : JSON.stringify(theVal)
+        }).then((response) => {
+            response.json()
+            .then((data) => {
+                Validate.disabled = true
+                attendanceForm.style.opacity = "1"
+                console.log(data)
+            })
             
-        // })
-        // .catch(() => {
-        //     NotificationBar(false)
-        // })
+        })
+        .catch(() => {
+            NotificationBar(false)
+        })
     }
 }
 
