@@ -11,6 +11,8 @@ headers = {
 }
 
 data = '{"username":"user1","password":"password1"}'
+url = 'http://localhost:5000'
 
-response = requests.post('http://localhost:5000/login', headers=headers, data=data)
+
+response = requests.post(url, headers=headers, json=data)
 print(response.text)
