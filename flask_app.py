@@ -19,12 +19,6 @@ class Person(db.Model):
 	first_name = db.Column(db.String(50),nullable=False)
 	last_name = db.Column(db.String(50),nullable=False)
 	gender = db.Column(db.String(10),nullable=False)
-class Courses(db.Model):
-	id = db.Column(db.Integer,primary_key=True)
-	matric_num = db.Column(db.String(20),db.ForeignKey('person.matric_num'))
-	status = db.Column(db.Integer,default=0)
-	sick = db.Column(db.Integer,default=0)
-	present = db.Column(db.Integer,default=0)
 	ITGY_402 = db.Column(db.Boolean,nullable = False,default=0)
 	GEDS_420 = db.Column(db.Boolean,nullable = False,default=0)
 	GEDS_420 = db.Column(db.Boolean,nullable = False,default=0)
@@ -36,6 +30,22 @@ class Courses(db.Model):
 	COSC_430 = db.Column(db.Boolean,nullable = False,default=0)
 	GEDS_002 = db.Column(db.Boolean,nullable = False,default=0)
 	GEDS_400 = db.Column(db.Boolean,nullable = False,default=0)
+
+
+class Courses(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	matric_num = db.Column(db.String(20),db.ForeignKey('person.matric_num'))
+	ITGY_402 = db.Column(db.Integer,nullable = False,default=0)
+	GEDS_420 = db.Column(db.Integer,nullable = False,default=0)
+	GEDS_420 = db.Column(db.Integer,nullable = False,default=0)
+	GEDS_400 = db.Column(db.Integer,nullable = False,default=0)
+	ITGY_408 = db.Column(db.Integer,nullable = False,default=0)
+	ITGY_312 = db.Column(db.Integer,nullable = False,default=0)
+	ITGY_402 = db.Column(db.Integer,nullable = False,default=0)
+	ITGY_406 = db.Column(db.Integer,nullable = False,default=0)
+	COSC_430 = db.Column(db.Integer,nullable = False,default=0)
+	GEDS_002 = db.Column(db.Integer,nullable = False,default=0)
+	GEDS_400 = db.Column(db.Integer,nullable = False,default=0)
 
 
 
@@ -52,33 +62,50 @@ def mark_attendance():
 		data = request.get_json()
 		if len(data) == 1:
 			matric_num=data['matricNum']
-			exist=Courses.query.filter_by(matric_num=matric_num)
-			return jsonify({'message':int(bool(exist))})
+			exist=Courses.query.filter_by(matric_num=matric_num).first()
+			if exist:
+				return jsonify({
+					'id' : exist.matric_num,
+					"GEDS420" : exist.GEDS_420,
+					"GEDS400" : exist.GEDS_400,
+					"ITGY408" : exist.ITGY_408,
+					"ITGY312" : exist.ITGY_312,
+					"ITGY402" : exist.ITGY_402,
+					"ITGY406" : exist.ITGY_406,
+					"COSC430" : exist.COSC_430,
+					"GEDS002" : exist.GEDS_002
+				})
+			else:
+				return jsonify({'message' : f'Student {matric_num} not found'})
+	
+
 		matric_num = data['id']
-		course = '_'.join(data['course'].split())
-		status=1 if data['attendaceStatus']=='Present' else 0
-
-		courses=Courses(
-		matric_num=matric_num,
-		course=status
-		)
-
-	exist=db.query.filter_by(matric_num=matric_num).first()
+		print(matric_num)
+		ITGY_402 = data.get("ITGY402",0)
+		GEDS_420 = data.get('GEDS420',0)
+		GEDS_400 = data.get('GEDS400',0)
+		ITGY_408 = data.get("ITGY408",0)
+		ITGY_312 = data.get('ITGY312',0)
+		ITGY_402 = data.get('ITGY402',0)
+		ITGY_406 = data.get('ITGY406',0)
+		COSC_430 = data.get('COSC430',0)
+		GEDS_002 = data.get('GEDS002',0)
+		
+	exist=Courses.query.filter_by(matric_num=matric_num).first()
 	if not exist:
 		return jsonify({'message':'No user found'})
 	else:
-		course_dict= {
-			"ITGY_402":"ITGY_402",
-			"GEDS_420":"GEDS_420",
-			"GEDS_400":"GEDS_400",
-			"ITGY_408":"ITGY_408",
-			"ITGY_312":"ITGY_312",
-			"ITGY_402":"ITGY_402",
-			"ITGY_406":"ITGY_406",
-			"COSC_430":"COSC_430",
-			"GEDS_002":"GEDS_002"
-		}
-		exist.course += status
+		exist.ITGY_402 += ITGY_402
+		exist.GEDS_420 += GEDS_420
+		exist.GEDS_400 += GEDS_400
+		exist.ITGY_408 += ITGY_408
+		exist.ITGY_312 += ITGY_312
+		exist.ITGY_406 += ITGY_406
+		exist.COSC_430 += COSC_430
+		exist.GEDS_002 += GEDS_002
+		db.session.commit()
+		return {'message' : f'Attendance record for {matric_num} updated'}
+
 @app.route('/register', methods=['POST','GET'])
 def create_student():
 	if request.method=='GET':
@@ -105,10 +132,6 @@ def create_student():
 	matric_num=matric_num,
 	first_name=first_name,
 	last_name=last_name,
-	gender = gender)
-
-	courses=Courses(
-	matric_num=matric_num,
 	ITGY_402 =ITGY_402,
 	GEDS_420=GEDS_420,
 	GEDS_400=GEDS_400,
@@ -116,7 +139,19 @@ def create_student():
 	ITGY_312=ITGY_312,
 	ITGY_406=ITGY_406,
 	COSC_430=COSC_430,
-	GEDS_002=GEDS_002
+	GEDS_002=GEDS_002,
+	gender = gender)
+
+	courses=Courses(
+	matric_num=matric_num,
+	ITGY_402=0,
+	GEDS_420=0,
+	GEDS_400=0,
+	ITGY_408=0,
+	ITGY_312=0,
+	ITGY_406=0,
+	COSC_430=0,
+	GEDS_002=0
 	)
 
 	exists=Person.query.filter_by(matric_num=matric_num).first()
@@ -201,10 +236,8 @@ def get_all():
 			'matricNum': student.matric_num,
 			'first_name': student.first_name,
 			'last_name' : student.last_name,
-			'gender': student.gender,
-			'absent' : student.status,
-			'sick' : student.sick,
-			'present' : student.present})
+			'gender': student.gender
+			})
 
 	with open('students.json','w') as file:
 		json.dump(json_arr,file)
@@ -214,16 +247,14 @@ def get_all():
 
 
 def matric_format(matric:str) -> str:
-	alpha_buffer =""
-	num_buffer = ''
+	buffer = ''
 	for i in matric:
 		try:
 			n = int(i)
-			num_buffer+=str(n)
+			buffer+=str(n)
 		except:
-			alpha_buffer += i
-	alpha_buffer=alpha_buffer.upper()
-	return alpha_buffer+num_buffer
+			buffer += i.upper()
+	return buffer
 
 if __name__ == '__main__':
 	app.run(debug=True)
