@@ -20,6 +20,7 @@ logging.basicConfig(level=logging.INFO)
 # LOGIN MANAGER
 login_manager = LoginManager(app)
 
+
 # DATABASE MODELS
 class Person(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -47,9 +48,7 @@ class Admin(db.Model,UserMixin):
 	role =db.Column(db.String, nullable=False, default='Lecturer')
 	username = db.Column(db.String(50), nullable=False)
 	password = db.Column(db.String(100), nullable=False)
-
-	def __init__(self):
-		return self.id
+	
 	def __repr__(self):
 		return f"{self.id}"
 
@@ -77,15 +76,22 @@ def index():
 
 # LOGIN LOGIC
 
+@login_manager.user_loader
+def load_user(id):
+    return Admin.query.get(int(id))
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	if request.method == 'POST':
 		print(session.items())
 		info = request.get_json()
-		user = info['username']
-		passwd = info['password']
-		if authenticate(user, passwd):
-			session['user'] = user
+		username = info['username']
+		password = info['password']
+		if authenticate(username, password):
+			admin = Admin.query.filter_by(username=username).first()
+			session['user'] = admin.id
+			admin_obj = Admin(admin.id)
+			login_user(admin_obj)
 			return redirect(url_for('admin'))
 		else:
 			return jsonify({'message': 'incorrect username or password'})
@@ -93,9 +99,13 @@ def login():
 		return render_template('login.html')
 
 
-def authenticate(user, passwd):
-	return bool(user == login_details['username'] and passwd == login_details['password'])
+def authenticate(username, password):
+	admin = Admin.query.filter_by(username=username).first()
+	if admin:
+		return bool(username == admin.username and password == admin.password)
+	return False
 
+# MARK ATTENDANCE
 
 @app.route('/attendance', methods=['POST', 'GET'])
 def mark_attendance():
@@ -149,7 +159,7 @@ def mark_attendance():
 		db.session.commit()
 		return {'message': f'Attendance record for {matric_num} updated'}
 
-
+# CREATE USERS
 @app.route('/register', methods=['POST', 'GET'])
 def create_student():
 	if request.method == 'GET':
@@ -204,6 +214,30 @@ def create_student():
 	else:
 		return jsonify({'message': f"Student with matric {matric_num} already exists"})
 
+@app.route('/signup',methods=['POST','GET'])
+def create_admin():
+	if request.method == 'POST':
+		data = request.get_json()
+		
+		name = data.get('name',None)
+		role = data.get('role',None)
+		username = data.get('username',None)
+		password = data.get('password',None)
+
+		admin = Admin(
+			name=name,
+			role=role,
+			username=username,
+			password=password
+		)
+		exist = Admin.query.filter_by(username=username).first()
+		if exist:
+			return {'message':'User already exists'}
+		else:
+			db.session.add(admin)
+			db.session.commit()
+			return f'User {username} created'
+	return 'HI'
 
 login_details = ast.literal_eval(open('./static/auth.json').read())['admin']
 
