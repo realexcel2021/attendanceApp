@@ -109,9 +109,9 @@ submitButton.onclick = () => {
 
     let validateCourses = (val) => {
         if(val == "Yes"){
-            return true
+            return 1
         }else {
-            return false
+            return 0
         }
     }
 
@@ -137,10 +137,11 @@ submitButton.onclick = () => {
             headers : {"Content-Type":"application/json"},
         }).then(response => {
             response.json()
+            .then(data => console.log(data))
             NotificationBar()
             Reset()
-        })
-        .then(data => console.log(data))   
+            console.log(pushobj)
+        })   
         
     }
 }

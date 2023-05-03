@@ -1,6 +1,6 @@
 student.json
 /c3-0.7.20
 /attendanceApp
-/instance
+./instance
 /templates/node_modules
 /templates/package-lock.json

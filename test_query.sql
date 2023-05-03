@@ -1,2 +1,2 @@
 -- SQLite
-SELECT * FROM person;
+SELECT * from person;
