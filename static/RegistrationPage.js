@@ -109,9 +109,9 @@ submitButton.onclick = () => {
 
     let validateCourses = (val) => {
         if(val == "Yes"){
-            return 1
+            return true
         }else {
-            return 0
+            return false
         }
     }
 
