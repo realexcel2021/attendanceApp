@@ -1,4 +1,4 @@
-let Option, Validate, attendanceForm, submitButton, radioButton, matricNum, Notification
+let Option, Validate, attendanceForm, submitButton, radioButton, matricNum, Notification, courseList
 
 Validate = document.getElementById("validate")
 attendanceForm = document.getElementById("attendanceForm")
@@ -30,6 +30,19 @@ function NotificationBar(form){
        }, 2000);
 }
 
+let NotificationBar2 = (data) => {
+    if(data){
+        Notification.style.display = 'block'
+        Notification.style.backgroundColor = 'red'
+        document.getElementById("text").innerText = data
+    }
+    
+        setTimeout(() => {
+            let Notification = document.getElementById("notification")
+            Notification.style.opacity = "0"
+           }, 2000);
+}
+
 attendanceForm.style.opacity = "0"
 
 Validate.onclick = () => {
@@ -42,13 +55,31 @@ Validate.onclick = () => {
         console.log(theVal)
         fetch("/attendance", {
             method : "POST",
+            headers : {
+                "Content-Type":"application/json" 
+            },
             body : JSON.stringify(theVal)
         }).then((response) => {
             response.json()
             .then((data) => {
-                Validate.disabled = true
-                attendanceForm.style.opacity = "1"
-                console.log(data)
+               if(data.message === `Student ${matricNum.value} not found`){
+                    NotificationBar2(`Student with matric Number ${matricNum.value} was not found`)
+               }else{
+                    Validate.disabled = true
+                    attendanceForm.style.opacity = "1"
+                    console.log(data)
+                    courseList = {
+                        ...data
+                    }
+                    let courses = Object.keys(courseList)
+                    courses.forEach((gender) => {
+                        if(gender !== "id" && courseList[gender] === 1){
+                            let node = document.createElement("option")
+                        node.innerText = gender
+                        Option.appendChild(node)
+                        }
+                    })
+               }
             })
             
         })
@@ -91,20 +122,21 @@ submitButton.onclick = () => {
     }
 
     console.log(submitObj)
+    console.log(courseList)
 
-    fetch("/attendance", {
-        method: "POST",
-        headers : {
-            "Content-Type" : "application/json"
-        },
-        body: JSON.stringify(submitObj)
-    })
-    .then(response => {
-        response.json()
-        .then(data => console.log(data))
-    })
-    .catch(() => {
-        NotificationBar(false)
-    })
+    // fetch("/attendance", {
+    //     method: "POST",
+    //     headers : {
+    //         "Content-Type" : "application/json"
+    //     },
+    //     body: JSON.stringify(submitObj)
+    // })
+    // .then(response => {
+    //     response.json()
+    //     .then(data => console.log(data))
+    // })
+    // .catch(() => {
+    //     NotificationBar(false)
+    // })
 
 }
