@@ -11,10 +11,6 @@ headers = {
 }
 
 url = 'http://localhost:5000'
-matric = 123321
-matric = 131222
-matric = 112233
-matric = 344555
 
 
 def test_create_student(url,headers,matric):
@@ -23,9 +19,9 @@ def test_create_student(url,headers,matric):
 	data = {
 	'ITGY_402' : 1,
 	'GEDS_420' : 1,
-	'GEDS_400' : 1,
+	'GEDS_400' : 0,
 	'ITGY_408' : 1,
-	'ITGY_312' : 1,
+	'ITGY_312' : 0,
 	'ITGY_402' : 1,
 	'ITGY_406' : 1,
 	'COSC_430' : 1,
@@ -58,12 +54,55 @@ def test_attendance(url, headers, matric):
 		'ITGY402' : 0,
 		'ITGY406' : 0,
 		'COSC430' : 1,
-		'GEDS002' : 1
+		'GEDS002' : 1,
+		"sick" : 1
 	}
 	r = requests.post(url, headers=headers, json=data )
 	print(r.text)
 
+
+
+def login_test(url):
+	data = {
+		'username': 'user2',
+		'password': 'password2'
+	}
+	r = requests.post(url, headers=headers, json=data)
+	print(r.status_code,r.headers)
+
+def create_admin(url):
+	for i in range(3):
+		data = {
+			'username' : f'user{i}',
+			'password' : f'password{i}',
+			'name' : f'Admin{i}'
+		}
+		r = requests.post(url, json=data, headers=headers)
+		print(r.status_code,r.headers)
+
 # uncomment one or both to test
 
+matric = 123321
 test_create_student(url, headers, matric)
 test_attendance(url, headers, matric)
+
+matric = 131222
+test_create_student(url, headers, matric)
+test_attendance(url, headers, matric)
+
+matric = 112233
+test_create_student(url, headers, matric)
+test_attendance(url, headers, matric)
+
+matric = 344555
+test_create_student(url, headers, matric)
+test_attendance(url, headers, matric)
+
+
+
+# Admin Creation and Login
+create_admin(url+'/signup')
+login_test(url+'/login')
+
+r = requests.get(url+'/students.json', headers=headers)
+print(r.text)
