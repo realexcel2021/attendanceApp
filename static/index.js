@@ -73,7 +73,7 @@ Validate.onclick = () => {
                     }
                     let courses = Object.keys(courseList)
                     courses.forEach((gender) => {
-                        if(gender !== "id" && courseList[gender] === 1){
+                        if(gender !== "id" && courseList[gender] === true){
                             let node = document.createElement("option")
                         node.innerText = gender
                         Option.appendChild(node)
@@ -124,19 +124,19 @@ submitButton.onclick = () => {
     console.log(submitObj)
     console.log(courseList)
 
-    // fetch("/attendance", {
-    //     method: "POST",
-    //     headers : {
-    //         "Content-Type" : "application/json"
-    //     },
-    //     body: JSON.stringify(submitObj)
-    // })
-    // .then(response => {
-    //     response.json()
-    //     .then(data => console.log(data))
-    // })
-    // .catch(() => {
-    //     NotificationBar(false)
-    // })
+    fetch("/attendance", {
+        method: "POST",
+        headers : {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify(submitObj)
+    })
+    .then(response => {
+        response.json()
+        .then(data => console.log(data))
+    })
+    .catch(() => {
+        NotificationBar(false)
+    })
 
 }
