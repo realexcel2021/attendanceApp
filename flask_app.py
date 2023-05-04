@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, send_from_directory, session
 from flask_cors import CORS
-from flask_login import LoginManager, UserMixin, login_user, logout_user
+from flask_login import LoginManager, UserMixin, login_required, login_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
+from sqlalchemy.orm import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 import ast
 import secrets
@@ -19,6 +20,14 @@ logging.basicConfig(level=logging.INFO)
 
 # LOGIN MANAGER
 login_manager = LoginManager(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+	return db.session.get(Admin, int(user_id))
+
+@login_manager.unauthorized_handler
+def unauthorized():
+	return redirect(url_for('login'))
 
 
 # DATABASE MODELS
@@ -47,16 +56,21 @@ class Admin(db.Model,UserMixin):
 	name = db.Column(db.String, nullable=False)
 	role =db.Column(db.String, nullable=False, default='Lecturer')
 	username = db.Column(db.String(50), nullable=False)
-	password = db.Column(db.String(100), nullable=False)
+	password = db.Column(db.String(250), nullable=False)
 	
 	def __repr__(self):
 		return f"{self.id}"
+	
+	def get_id(self):
+		return str(self.id)
+
+	def is_authenticated(self):
+		exists = db.session.query(Admin).filter_by(username=self.username, password=self.password).first()
+		return bool(exists)
 
 class Courses(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	matric_num = db.Column(db.String(20), db.ForeignKey('person.matric_num'))
-	ITGY_402 = db.Column(db.Integer, nullable=False, default=0)
-	GEDS_420 = db.Column(db.Integer, nullable=False, default=0)
 	GEDS_420 = db.Column(db.Integer, nullable=False, default=0)
 	GEDS_400 = db.Column(db.Integer, nullable=False, default=0)
 	ITGY_408 = db.Column(db.Integer, nullable=False, default=0)
@@ -65,7 +79,7 @@ class Courses(db.Model):
 	ITGY_406 = db.Column(db.Integer, nullable=False, default=0)
 	COSC_430 = db.Column(db.Integer, nullable=False, default=0)
 	GEDS_002 = db.Column(db.Integer, nullable=False, default=0)
-	GEDS_400 = db.Column(db.Integer, nullable=False, default=0)
+	sick = db.Column(db.Integer, nullable=False, default=0)
 
 
 # ROUTES
@@ -74,27 +88,39 @@ class Courses(db.Model):
 def index():
 	return render_template('index.html')
 
-# LOGIN LOGIC
+# LOGIN MANAGER
 
-@login_manager.user_loader
-def load_user(id):
-    return Admin.query.get(int(id))
+
+@app.route('/login', methods=['OPTIONS'])
+def handle_options():
+	response = app.make_default_options_response()
+	response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
+	return response
+
+
+@app.route('/admin', methods=['GET'])
+@login_required
+def admin():
+	if current_user.is_authenticated:
+		return render_template('adminPage.html',user=current_user)
+	else:
+		return render_template('login.html')
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	if request.method == 'POST':
-		print(session.items())
-		info = request.get_json()
-		username = info['username']
-		password = info['password']
+		data = request.get_json()
+		username = data.get('username')
+		password = data.get('password')
 		if authenticate(username, password):
-			admin = Admin.query.filter_by(username=username).first()
-			session['user'] = admin.id
-			admin_obj = Admin(admin.id)
-			login_user(admin_obj)
+			admin = db.session.query(Admin).filter_by(username=username).first()
+			login_user(admin)
+			print(session.items())
 			return redirect(url_for('admin'))
 		else:
-			return jsonify({'message': 'incorrect username or password'})
+			error = 'Invalid Login details'
+			return render_template('login.html', error=error), 401
 	elif request.method == 'GET':
 		return render_template('login.html')
 
@@ -102,7 +128,7 @@ def login():
 def authenticate(username, password):
 	admin = Admin.query.filter_by(username=username).first()
 	if admin:
-		return bool(username == admin.username and password == admin.password)
+		return bool(username == admin.username and check_password_hash( admin.password,password))
 	return False
 
 # MARK ATTENDANCE
@@ -127,7 +153,7 @@ def mark_attendance():
 					"ITGY402": exist.ITGY_402,
 					"ITGY406": exist.ITGY_406,
 					"COSC430": exist.COSC_430,
-					"GEDS002": exist.GEDS_002
+					"GEDS002": exist.GEDS_002,
 				})
 			else:
 				return jsonify({'message': f'Student {matric_num} not found'})
@@ -143,6 +169,7 @@ def mark_attendance():
 		ITGY_406 = data.get('ITGY406', 0)
 		COSC_430 = data.get('COSC430', 0)
 		GEDS_002 = data.get('GEDS002', 0)
+		sick = data.get('sick', 0)
 
 	exist = Courses.query.filter_by(matric_num=matric_num).first()
 	if not exist:
@@ -156,6 +183,7 @@ def mark_attendance():
 		exist.ITGY_406 += ITGY_406
 		exist.COSC_430 += COSC_430
 		exist.GEDS_002 += GEDS_002
+		exist.sick += sick
 		db.session.commit()
 		return {'message': f'Attendance record for {matric_num} updated'}
 
@@ -202,7 +230,8 @@ def create_student():
 		ITGY_312=0,
 		ITGY_406=0,
 		COSC_430=0,
-		GEDS_002=0
+		GEDS_002=0,
+		sick=0
 	)
 
 	exists = Person.query.filter_by(matric_num=matric_num).first()
@@ -228,7 +257,7 @@ def create_admin():
 			name=name,
 			role=role,
 			username=username,
-			password=password
+			password=generate_password_hash(password)
 		)
 		exist = Admin.query.filter_by(username=username).first()
 		if exist:
@@ -242,17 +271,6 @@ def create_admin():
 login_details = ast.literal_eval(open('./static/auth.json').read())['admin']
 
 
-@app.route('/login', methods=['OPTIONS'])
-def handle_options():
-	response = app.make_default_options_response()
-	response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
-	return response
-
-
-@app.route('/admin', methods=['GET'])
-def admin():
-	if request.method == 'GET':
-		return render_template('adminPage.html')
 
 
 @app.route('/search-line.png', methods=['GET'])
@@ -290,27 +308,6 @@ def get_student():
 		return jsonify({'message': 'Student not found'})
 
 
-@app.route('/students.json', methods=['GET'])
-def get_all():
-	students = Person.query.all()
-	courses = Courses.query.all()
-	json_arr = []
-	for student in students:
-		json_arr.append({
-			'id': student.matric_num,
-			'matricNum': student.matric_num,
-			'first_name': student.first_name,
-			'last_name': student.last_name,
-			'gender': student.gender
-		})
-
-	with open('students.json', 'w') as file:
-		json.dump(json_arr, file)
-	with open('students.json', 'r') as json_out_file:
-		out = json.load(json_out_file)
-	return jsonify(out)
-
-
 def matric_format(matric: str) -> str:
 	buffer = ''
 	for i in matric:
@@ -320,6 +317,48 @@ def matric_format(matric: str) -> str:
 		except:
 			buffer += i.upper()
 	return buffer
+
+@app.route('/students.json', methods=['GET'])
+def students():
+	students = Person.query.join(Courses).all()
+	student_arr= []
+	course_arr =[]
+	for i, student in enumerate(students):
+		for course in student.courses:
+			course_arr.append({
+                'matricNum': course.matric_num,
+				'GEDS_400': course.GEDS_400,
+				"GEDS_420": course.GEDS_420,
+				"GEDS_400": course.GEDS_400,
+				"ITGY_408": course.ITGY_408,
+				"ITGY_312": course.ITGY_312,
+				"ITGY_402": course.ITGY_402,
+				"ITGY_406": course.ITGY_406,
+				"COSC_430": course.COSC_430,
+				"GEDS_002": course.GEDS_002,
+				'sick': course.sick
+            })
+		student_arr.append({
+			'matricNum': student.matric_num,
+			'first_name': student.first_name,
+			'last_name': student.last_name,
+			'gender': student.gender,
+			'GEDS_400':student.GEDS_400,
+			"GEDS_420" : student.GEDS_420,
+			"GEDS_400": student.GEDS_400,
+			"ITGY_408": student.ITGY_408,
+			"ITGY_312": student.ITGY_312,
+			"ITGY_402": student.ITGY_402,
+			"ITGY_406": student.ITGY_406,
+			"COSC_430": student.COSC_430,
+			"GEDS_002": student.GEDS_002,
+			'attendance' : course_arr[i]
+		})
+	with open('students.json', 'w') as file:
+		json.dump(student_arr, file)
+	with open('students.json', 'r') as json_out_file:
+		out = json.load(json_out_file)
+	return jsonify(out)
 
 
 if __name__ == '__main__':
